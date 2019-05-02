@@ -15,20 +15,21 @@ import java.util.TimerTask;
  *
  * @author Fitri
  */
-class timeLog extends TimerTask{
+class timeLog extends TimerTask {
 
-    public static int time=0;
-    
+    public static int time = 0;
+
     @Override
     public void run() {
-        System.out.println("Time: "+ ++time);
+        System.out.println("Time: " + ++time);
     }
-    
-    public int getTime(){
+
+    public int getTime() {
         return time;
     }
-    
+
 }
+
 public class RestaurantCrabfood {
 
     /**
@@ -39,10 +40,10 @@ public class RestaurantCrabfood {
         RestaurantBranch crustyCrab = new RestaurantBranch();
         RestaurantBranch phumBucket = new RestaurantBranch();
         RestaurantBranch burgerKrusty = new RestaurantBranch();
-        
+
         Timer timer = new Timer();
         timeLog task = new timeLog();
-        timer.schedule(task,0,1000);
+        timer.schedule(task, 0, 1000);
 
         try {
             Scanner sc = new Scanner(new FileInputStream("Input.txt"));
@@ -54,7 +55,7 @@ public class RestaurantCrabfood {
                 for (int i = 0; i < 6; i++) {
                     dishDetails[i] = sc.nextLine();
                 }
-                if(sc.hasNextLine()){
+                if (sc.hasNextLine()) {
                     sc.nextLine();
                 }
                 switch (company) {
@@ -74,22 +75,49 @@ public class RestaurantCrabfood {
         } catch (FileNotFoundException e) {
             System.out.println("Error: " + e);
         }
-        
+
+        String restaurant = "Crusty Crab";
+
         crustyCrab.order("Crabby Patty");
         crustyCrab.order("Crabby Meal");
         crustyCrab.order("Sailors Surprise");
-        crustyCrab.order("Sailors Surprise");
+        crustyCrab.order("Crabby Patty");
         crustyCrab.order("Crabby Meal");
-        
-        
-        System.out.println("Total time required to prepare dish: "+crustyCrab.totalTime());
-        
-        Thread chef1 = new Thread(crustyCrab);
-        chef1.start();
-        Thread chef2 = new Thread(crustyCrab);
-        chef2.start();
-        Thread chef3 = new Thread(crustyCrab);
-        chef3.start();
+
+        Thread chef1;
+        Thread chef2;
+        Thread chef3;
+        switch (restaurant) {
+
+            case "Crusty Crab":
+                System.out.println("Total time required to prepare dish: " + crustyCrab.totalTime());
+                chef1 = new Thread(crustyCrab);
+                chef1.start();
+                chef2 = new Thread(crustyCrab);
+                chef2.start();
+                chef3 = new Thread(crustyCrab);
+                chef3.start();
+                break;
+            case "Phum Bucket":
+                System.out.println("Total time required to prepare dish: " + phumBucket.totalTime());
+                chef1 = new Thread(phumBucket);
+                chef1.start();
+                chef2 = new Thread(phumBucket);
+                chef2.start();
+                chef3 = new Thread(phumBucket);
+                chef3.start();
+                break;
+            case "Burger Krusty":
+                System.out.println("Total time required to prepare dish: " + burgerKrusty.totalTime());
+                chef1 = new Thread(burgerKrusty);
+                chef1.start();
+                chef2 = new Thread(burgerKrusty);
+                chef2.start();
+                chef3 = new Thread(burgerKrusty);
+                chef3.start();
+                break;
+                
+        }
     }
 
 }
