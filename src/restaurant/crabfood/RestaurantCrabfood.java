@@ -21,7 +21,7 @@ class timeLog extends TimerTask {
 
     @Override
     public void run() {
-        System.out.println("Time: " + ++time);
+        System.out.println("Time: " + ++time); //TO BE DISPLAYED
     }
 
     public int getTime() {
@@ -40,10 +40,16 @@ public class RestaurantCrabfood {
         RestaurantBranch crustyCrab = new RestaurantBranch();
         RestaurantBranch phumBucket = new RestaurantBranch();
         RestaurantBranch burgerKrusty = new RestaurantBranch();
+        Thread chef1;
+        Thread chef2;
+        Thread chef3;
 
         Timer timer = new Timer();
         timeLog task = new timeLog();
-        timer.schedule(task, 0, 1000);
+        int time = 0;
+
+        Scanner input = new Scanner(System.in);
+        int choice;
 
         try {
             Scanner sc = new Scanner(new FileInputStream("Input.txt"));
@@ -75,49 +81,75 @@ public class RestaurantCrabfood {
         } catch (FileNotFoundException e) {
             System.out.println("Error: " + e);
         }
+//START APPLICATION
+        do {
 
-        String restaurant = "Crusty Crab";
+            String restaurant = "Crusty Crab"; //TO BE REPLACED WITH BUTTON
 
-        crustyCrab.order("Crabby Patty");
-        crustyCrab.order("Crabby Meal");
-        crustyCrab.order("Sailors Surprise");
-        crustyCrab.order("Crabby Patty");
-        crustyCrab.order("Crabby Meal");
+            crustyCrab.order("Crabby Patty"); //TO BE REPLACED WITH BUTTON
+            crustyCrab.order("Crabby Meal"); //TO BE REPLACED WITH BUTTON
+            crustyCrab.order("Sailors Surprise"); //TO BE REPLACED WITH BUTTON
+            crustyCrab.order("Crabby Patty"); //TO BE REPLACED WITH BUTTON
+            crustyCrab.order("Crabby Meal"); //TO BE REPLACED WITH BUTTON
 
-        Thread chef1;
-        Thread chef2;
-        Thread chef3;
-        switch (restaurant) {
+            switch(restaurant){
+                case "Crusty Crab":
+                    System.out.println("Total time required to prepare dish: " + crustyCrab.totalTime());
+                    break;
+                case "Phum Bucket":
+                    System.out.println("Total time required to prepare dish: " + phumBucket.totalTime());
+                    break;
+                case "Burger Krusty":
+                    System.out.println("Total time required to prepare dish: " + burgerKrusty.totalTime());
+                    break;
+            }
+            System.out.println("Proceed? (1) to continue"); //TO BE REPLACED WITH BUTTON
+            input.nextInt();
+            timer.schedule(task, time, 1000);
+            switch (restaurant) {
 
-            case "Crusty Crab":
-                System.out.println("Total time required to prepare dish: " + crustyCrab.totalTime());
-                chef1 = new Thread(crustyCrab);
-                chef1.start();
-                chef2 = new Thread(crustyCrab);
-                chef2.start();
-                chef3 = new Thread(crustyCrab);
-                chef3.start();
-                break;
-            case "Phum Bucket":
-                System.out.println("Total time required to prepare dish: " + phumBucket.totalTime());
-                chef1 = new Thread(phumBucket);
-                chef1.start();
-                chef2 = new Thread(phumBucket);
-                chef2.start();
-                chef3 = new Thread(phumBucket);
-                chef3.start();
-                break;
-            case "Burger Krusty":
-                System.out.println("Total time required to prepare dish: " + burgerKrusty.totalTime());
-                chef1 = new Thread(burgerKrusty);
-                chef1.start();
-                chef2 = new Thread(burgerKrusty);
-                chef2.start();
-                chef3 = new Thread(burgerKrusty);
-                chef3.start();
-                break;
-                
-        }
+                case "Crusty Crab":
+                    chef1 = new Thread(crustyCrab);
+                    chef1.start();
+                    chef2 = new Thread(crustyCrab);
+                    chef2.start();
+                    chef3 = new Thread(crustyCrab);
+                    chef3.start();
+                    chef1.join();
+                    chef2.join();
+                    chef3.join();
+                    break;
+                case "Phum Bucket":
+                    chef1 = new Thread(phumBucket);
+                    chef1.start();
+                    chef2 = new Thread(phumBucket);
+                    chef2.start();
+                    chef3 = new Thread(phumBucket);
+                    chef3.start();
+                    chef1.join();
+                    chef2.join();
+                    chef3.join();
+                    break;
+                case "Burger Krusty":
+                    chef1 = new Thread(burgerKrusty);
+                    chef1.start();
+                    chef2 = new Thread(burgerKrusty);
+                    chef2.start();
+                    chef3 = new Thread(burgerKrusty);
+                    chef3.start();
+                    chef1.join();
+                    chef2.join();
+                    chef3.join();
+                    break;
+            }
+            time = task.getTime();
+            System.out.println("ALL FINISHED! CURRENT TIME IS: " + time);
+            timer.cancel();
+            timer = new Timer();
+            task = new timeLog();
+            System.out.println("Press (1) to order again, press any other int value to exit");
+            choice = input.nextInt(); //TO BE REPLACED WITH BUTTON
+        } while (choice == 1);
+
     }
-
 }

@@ -16,9 +16,10 @@ import java.util.logging.Logger;
  */
 public class RestaurantBranch implements Runnable {
 
-    private HashMap dishTime = new HashMap();
-    private HashMap dishPrice = new HashMap();
-    private Queue orderList = new Queue();
+    private final HashMap dishTime = new HashMap();
+    private final HashMap dishPrice = new HashMap();
+    private final Queue orderList = new Queue();
+    private static boolean cookingState=false;
 
     public RestaurantBranch() {
     }
@@ -85,15 +86,25 @@ public class RestaurantBranch implements Runnable {
         }
         return time;
     }
+    
+    public boolean isCooking(){
+        return cookingState;
+    }
+    public boolean isEmpty(){
+        return orderList.isEmpty();
+    }
 
     private void cook(String dishName, int time) throws InterruptedException {
         for (int i = 1; i <= time; i++) {
-            System.out.println("Preparing " + dishName + ": " + i + " second(s) has elapsed");
+            System.out.println("Preparing " + dishName + ": " + i + " second(s) has elapsed"); //TO BE DISPLAYED
             TimeUnit.SECONDS.sleep(1);
         }
-        System.out.println(dishName + " has successfully been cooked!");
+        System.out.println(dishName + " has successfully been cooked!"); //TO BE DISPLAYED
+        if(orderList.isEmpty()){
+            cookingState=false;
+        }
     }
-
+    
     @Override
     public void run() {
         String dish;
@@ -101,6 +112,7 @@ public class RestaurantBranch implements Runnable {
             dish = (String) orderList.removeFirst();
             try {
                 cook(dish, (int) dishTime.get(dish));
+                cookingState=true;
             } catch (InterruptedException ex) {
                 Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
             }
