@@ -6,6 +6,8 @@
 package restaurant.crabfood;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,14 +16,47 @@ import java.util.logging.Logger;
  *
  * @author Fitri
  */
+class timeLog2 extends TimerTask {
+
+    private int time;
+
+    public timeLog2(int startTime) {
+        this.time = startTime;
+    }
+
+    @Override
+    public void run() {
+        time++;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+}
+
 public class RestaurantBranch implements Runnable {
 
+    private static int customerNo = 0;
     private static final HashMap dishTime = new HashMap();
-    private final HashMap dishPrice = new HashMap();
-    private final Queue orderList = new Queue();
+    private static final HashMap dishPrice = new HashMap();
+    private static final Queue orderList = new Queue();
     private static boolean cookingState = false;
+    private int totalTime;
+    private int startTime;
+    Timer timer;
+    timeLog2 task;
+    Customer customer;
 
     public RestaurantBranch() {
+    }
+
+    public RestaurantBranch(int time, Customer customer) {
+        timer = new Timer();
+        task = new timeLog2(time);
+        customerNo++;
+        startTime = time;
+        this.customer = customer;
     }
 
     public void setDish(String dishName, int time, double price) {
@@ -37,11 +72,16 @@ public class RestaurantBranch implements Runnable {
         return (double) dishPrice.get(dishName);
     }
 
+    public int getStartTime() {
+        return startTime;
+    }
+
     public void setDishes(String[] dishText) {
         for (int i = 0; i < 6; i += 2) {
             String timePrice[] = dishText[i + 1].split(",");
             setDish(dishText[i], Integer.parseInt(timePrice[0]), Double.parseDouble(timePrice[1]));
         }
+        totalTime = totalTime();
     }
 
     public void order(String dishName) {
@@ -101,23 +141,54 @@ public class RestaurantBranch implements Runnable {
             TimeUnit.SECONDS.sleep(1);
         }
         System.out.println(dishName + " has successfully been cooked!"); //TO BE DISPLAYED
-        if (orderList.isEmpty()) {
-            cookingState = false;
+        time = task.getTime()-startTime;
+        System.out.println("TIME IS " + time);
+        if (orderList.isEmpty() && (time >= totalTime)) {
+            synchronized (this) {
+                notifyAll();
+            }
         }
+    }
+
+    public void startChef() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                cookingState = true;
+                String dish;
+                while (!orderList.isEmpty()) {
+                    dish = (String) orderList.removeFirst();
+                    try {
+                        cook(dish, (int) dishTime.get(dish));
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }).start();
     }
 
     @Override
     public void run() {
-        String dish;
-        while (!orderList.isEmpty()) {
-            dish = (String) orderList.removeFirst();
+        timer.schedule(task, startTime, 1000);
+        cookingState = true;
+        int thisCustomer = customerNo;
+        totalTime = totalTime();
+        startChef();
+        startChef();
+        startChef();
+
+        synchronized (this) {
             try {
-                cook(dish, (int) dishTime.get(dish));
-                cookingState = true;
+                wait();
             } catch (InterruptedException ex) {
                 Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        System.out.println("Order finished for Customer " + thisCustomer + ", time is: " + (task.getTime()));
+        System.out.println("Delivery from branch x to (x,x) is now starting."); //WITH THE HELP OF MAP
+        customer.setFinishedCookingTime(task.getTime());
+        timer.cancel();
     }
 
 }
