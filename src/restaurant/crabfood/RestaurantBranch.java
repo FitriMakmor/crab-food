@@ -16,10 +16,10 @@ import java.util.logging.Logger;
  */
 public class RestaurantBranch implements Runnable {
 
-    private final HashMap dishTime = new HashMap();
+    private static final HashMap dishTime = new HashMap();
     private final HashMap dishPrice = new HashMap();
     private final Queue orderList = new Queue();
-    private static boolean cookingState=false;
+    private static boolean cookingState = false;
 
     public RestaurantBranch() {
     }
@@ -70,12 +70,12 @@ public class RestaurantBranch implements Runnable {
                 }
             }
             if (chefs[0] >= chefs[1] && chefs[0] >= chefs[2]) {
-                    time = chefs[0];
-                } else if (chefs[1] >= chefs[2]) {
-                    time = chefs[1];
-                } else {
-                    time = chefs[2];
-                }
+                time = chefs[0];
+            } else if (chefs[1] >= chefs[2]) {
+                time = chefs[1];
+            } else {
+                time = chefs[2];
+            }
 
         } else {
             for (int i = 0; i < orderList.size(); i++) {
@@ -86,11 +86,12 @@ public class RestaurantBranch implements Runnable {
         }
         return time;
     }
-    
-    public boolean isCooking(){
+
+    public boolean isCooking() {
         return cookingState;
     }
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return orderList.isEmpty();
     }
 
@@ -100,11 +101,11 @@ public class RestaurantBranch implements Runnable {
             TimeUnit.SECONDS.sleep(1);
         }
         System.out.println(dishName + " has successfully been cooked!"); //TO BE DISPLAYED
-        if(orderList.isEmpty()){
-            cookingState=false;
+        if (orderList.isEmpty()) {
+            cookingState = false;
         }
     }
-    
+
     @Override
     public void run() {
         String dish;
@@ -112,7 +113,7 @@ public class RestaurantBranch implements Runnable {
             dish = (String) orderList.removeFirst();
             try {
                 cook(dish, (int) dishTime.get(dish));
-                cookingState=true;
+                cookingState = true;
             } catch (InterruptedException ex) {
                 Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
             }

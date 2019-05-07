@@ -83,8 +83,11 @@ public class RestaurantCrabfood {
         }
 //START APPLICATION
         do {
-
+            System.out.println("Welcome to CrabFood Inc.! Choose your Restaurant\n(Display restaurants -(1) to continue)"); //TO BE REPLACED WITH BUTTON
+            input.nextInt();
             String restaurant = "Crusty Crab"; //TO BE REPLACED WITH BUTTON
+            System.out.println("You have chosen: "+restaurant+".\n Place your orders now. (Press 1 to continue)"); //TO BE REPLACED WITH BUTTON
+            input.nextInt();
 
             crustyCrab.order("Crabby Patty"); //TO BE REPLACED WITH BUTTON
             crustyCrab.order("Crabby Meal"); //TO BE REPLACED WITH BUTTON
@@ -92,7 +95,7 @@ public class RestaurantCrabfood {
             crustyCrab.order("Crabby Patty"); //TO BE REPLACED WITH BUTTON
             crustyCrab.order("Crabby Meal"); //TO BE REPLACED WITH BUTTON
 
-            switch(restaurant){
+            switch (restaurant) {
                 case "Crusty Crab":
                     System.out.println("Total time required to prepare dish: " + crustyCrab.totalTime());
                     break;
