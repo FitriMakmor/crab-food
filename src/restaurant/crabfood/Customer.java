@@ -47,4 +47,9 @@ public class Customer {
     public int getTotalTime(){
         return finishedCookingTime+deliveryTime-arrivalTime;
     }
+    
+    @Override
+    public String toString(){
+        return "Arrival time: "+arrivalTime+"\nOrder time: "+orderTime+"\nFinished cooking time: "+finishedCookingTime+"\nDelivery time: "+deliveryTime+"\nTotal time: "+getTotalTime()+"\n";
+    }
 }

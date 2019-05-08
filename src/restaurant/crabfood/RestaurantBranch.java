@@ -186,7 +186,7 @@ public class RestaurantBranch implements Runnable {
             }
         }
         System.out.println("Order finished for Customer " + thisCustomer + ", time is: " + (task.getTime()));
-        System.out.println("Delivery from branch x to (x,x) is now starting."); //WITH THE HELP OF MAP
+        System.out.println("Delivery from branch (x,x) to location (x,x) is now starting."); //WITH THE HELP OF MAP
         customer.setFinishedCookingTime(task.getTime());
         timer.cancel();
     }

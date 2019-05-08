@@ -140,6 +140,11 @@ public class RestaurantCrabfood {
         } while (choice == 1);
 
         System.out.println("SYSTEM ENDS");
+        timer.cancel();
+        for(int i=0;i<Customer.size();i++){
+            System.out.println("Customer "+(i+1));
+            System.out.println(Customer.get(i));
+        }
 
     }
 }
