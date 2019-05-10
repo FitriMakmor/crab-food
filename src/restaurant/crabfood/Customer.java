@@ -32,6 +32,10 @@ public class Customer {
         deliveryTime=time;
     }
     
+    public int getArrivalTime(){
+        return arrivalTime;
+    }
+    
     public int getOrderTime(){
         return orderTime;
     }
@@ -50,6 +54,6 @@ public class Customer {
     
     @Override
     public String toString(){
-        return "Arrival time: "+arrivalTime+"\nOrder time: "+orderTime+"\nFinished cooking time: "+finishedCookingTime+"\nDelivery time: "+deliveryTime+"\nTotal time: "+getTotalTime()+"\n";
+        return arrivalTime+"       |"+orderTime+"          |"+finishedCookingTime+"                    |"+deliveryTime+"             |"+getTotalTime()+"\n";
     }
 }

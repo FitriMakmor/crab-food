@@ -40,8 +40,8 @@ public class RestaurantBranch implements Runnable {
     private static int customerNo = 0;
     private static final HashMap dishTime = new HashMap();
     private static final HashMap dishPrice = new HashMap();
-    private static final Queue orderList = new Queue();
-    private static boolean cookingState = false;
+    private static Queue orderList = new Queue();
+    private boolean cookingState = false;
     private int totalTime;
     private int startTime;
     Timer timer;
@@ -84,12 +84,17 @@ public class RestaurantBranch implements Runnable {
         totalTime = totalTime();
     }
 
-    public void order(String dishName) {
-        if (dishTime.containsKey(dishName)) {
+    public boolean order(String dishName) {
+        if (dishTime.containsKey(dishName) && cookingState == false) {
             orderList.add(dishName);
             System.out.println("Order successful!");
+            return false;
+        } else if (dishTime.containsKey(dishName) && cookingState == true) {
+            System.out.println("Kitchen is Busy!");
+            return true;
         } else {
             System.out.println("Dish not available in the menu!");
+            return true;
         }
     }
 
@@ -141,9 +146,8 @@ public class RestaurantBranch implements Runnable {
             TimeUnit.SECONDS.sleep(1);
         }
         System.out.println(dishName + " has successfully been cooked!"); //TO BE DISPLAYED
-        time = task.getTime()-startTime;
-        System.out.println("TIME IS " + time);
-        if (orderList.isEmpty() && (time >= totalTime)) {
+        time = task.getTime() - startTime;
+        if (orderList.isEmpty() && (time >= (totalTime - 1))) {
             synchronized (this) {
                 notifyAll();
             }
@@ -185,6 +189,7 @@ public class RestaurantBranch implements Runnable {
                 Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        cookingState=false;
         System.out.println("Order finished for Customer " + thisCustomer + ", time is: " + (task.getTime()));
         System.out.println("Delivery from branch (x,x) to location (x,x) is now starting."); //WITH THE HELP OF MAP
         customer.setFinishedCookingTime(task.getTime());
