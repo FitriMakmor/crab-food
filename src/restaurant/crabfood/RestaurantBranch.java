@@ -41,6 +41,8 @@ public class RestaurantBranch implements Runnable {
     private static final HashMap dishTime = new HashMap();
     private static final HashMap dishPrice = new HashMap();
     private static Queue orderList = new Queue();
+    private static Queue[] OrderLists = new Queue[5];
+    private static int listIndex = 0;
     private boolean cookingState = false;
     private int totalTime;
     private int startTime;
@@ -140,30 +142,30 @@ public class RestaurantBranch implements Runnable {
         return orderList.isEmpty();
     }
 
-    private void cook(String dishName, int time) throws InterruptedException {
+    private void cook(String dishName, int time, Queue list) throws InterruptedException {
         for (int i = 1; i <= time; i++) {
             System.out.println("Preparing " + dishName + ": " + i + " second(s) has elapsed"); //TO BE DISPLAYED
             TimeUnit.SECONDS.sleep(1);
         }
         System.out.println(dishName + " has successfully been cooked!"); //TO BE DISPLAYED
         time = task.getTime() - startTime;
-        if (orderList.isEmpty() && (time >= (totalTime - 1))) {
+        if (list.isEmpty() && (time >= (totalTime - 1))) {
             synchronized (this) {
                 notifyAll();
             }
         }
     }
 
-    public void startChef() {
+    public void startChef(Queue list) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 cookingState = true;
                 String dish;
-                while (!orderList.isEmpty()) {
-                    dish = (String) orderList.removeFirst();
+                while (!list.isEmpty()) {
+                    dish = (String) list.removeFirst();
                     try {
-                        cook(dish, (int) dishTime.get(dish));
+                        cook(dish, (int) dishTime.get(dish), list);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -178,9 +180,15 @@ public class RestaurantBranch implements Runnable {
         cookingState = true;
         int thisCustomer = customerNo;
         totalTime = totalTime();
-        startChef();
-        startChef();
-        startChef();
+        OrderLists[listIndex] = orderList;
+        startChef(OrderLists[listIndex]);
+        startChef(OrderLists[listIndex]);
+        startChef(OrderLists[listIndex]);
+        if (listIndex < 4) {
+            listIndex++;
+        }else{
+            listIndex=0;
+        }
 
         synchronized (this) {
             try {
@@ -189,7 +197,7 @@ public class RestaurantBranch implements Runnable {
                 Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        cookingState=false;
+        cookingState = false;
         System.out.println("Order finished for Customer " + thisCustomer + ", time is: " + (task.getTime()));
         System.out.println("Delivery from branch (x,x) to location (x,x) is now starting."); //WITH THE HELP OF MAP
         customer.setFinishedCookingTime(task.getTime());
