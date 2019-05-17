@@ -11,6 +11,8 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTextArea;
+import static restaurant.crabfood.Restaurant.status;
 
 /**
  *
@@ -37,6 +39,7 @@ class timeLog2 extends TimerTask {
 
 public class RestaurantBranch implements Runnable {
 
+    private String restaurantName;
     private static int customerNo = 0;
     private static final HashMap dishTime = new HashMap();
     private static final HashMap dishPrice = new HashMap();
@@ -50,7 +53,8 @@ public class RestaurantBranch implements Runnable {
     timeLog2 task;
     Customer customer;
 
-    public RestaurantBranch() {
+    public RestaurantBranch(String name) {
+        this.restaurantName=name;
     }
 
     public RestaurantBranch(int time, Customer customer) {
@@ -141,13 +145,19 @@ public class RestaurantBranch implements Runnable {
     public boolean isEmpty() {
         return orderList.isEmpty();
     }
+    
+    public void emptyList(){
+        while(!isEmpty()){
+            orderList.remove();
+        }
+    }
 
-    private void cook(String dishName, int time, Queue list) throws InterruptedException {
+    private void cook(String dishName, int time, Queue list,JTextArea chef) throws InterruptedException {
         for (int i = 1; i <= time; i++) {
-            System.out.println("Preparing " + dishName + ": " + i + " second(s) has elapsed"); //TO BE DISPLAYED
+            chef.setText("Preparing " + dishName + ": " + i + " second(s) has elapsed"); //TO BE DISPLAYED
             TimeUnit.SECONDS.sleep(1);
         }
-        System.out.println(dishName + " has successfully been cooked!"); //TO BE DISPLAYED
+        chef.setText(dishName + " has successfully been cooked!"); //TO BE DISPLAYED
         time = task.getTime() - startTime;
         if (list.isEmpty() && (time >= (totalTime - 1))) {
             synchronized (this) {
@@ -156,7 +166,7 @@ public class RestaurantBranch implements Runnable {
         }
     }
 
-    public void startChef(Queue list) {
+    public void startChef(Queue list,JTextArea chef) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -165,7 +175,7 @@ public class RestaurantBranch implements Runnable {
                 while (!list.isEmpty()) {
                     dish = (String) list.removeFirst();
                     try {
-                        cook(dish, (int) dishTime.get(dish), list);
+                        cook(dish, (int) dishTime.get(dish), list,chef);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -181,9 +191,9 @@ public class RestaurantBranch implements Runnable {
         int thisCustomer = customerNo;
         totalTime = totalTime();
         OrderLists[listIndex] = orderList;
-        startChef(OrderLists[listIndex]);
-        startChef(OrderLists[listIndex]);
-        startChef(OrderLists[listIndex]);
+        startChef(OrderLists[listIndex],OrderStatus.firstChef);
+        startChef(OrderLists[listIndex],OrderStatus.secondChef);
+        startChef(OrderLists[listIndex],OrderStatus.thirdChef);
         if (listIndex < 4) {
             listIndex++;
         }else{
@@ -198,8 +208,8 @@ public class RestaurantBranch implements Runnable {
             }
         }
         cookingState = false;
-        System.out.println("Order finished for Customer " + thisCustomer + ", time is: " + (task.getTime()));
-        System.out.println("Delivery from branch (x,x) to location (x,x) is now starting."); //WITH THE HELP OF MAP
+        status.append("\nOrder finished for Customer " + thisCustomer + ", time is: " + (task.getTime()));
+        status.append("\nDelivery from branch (x,x) to location (x,x) is now starting."); //WITH THE HELP OF MAP
         customer.setFinishedCookingTime(task.getTime());
         timer.cancel();
     }

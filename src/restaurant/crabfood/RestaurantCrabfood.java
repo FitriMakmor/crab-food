@@ -35,34 +35,42 @@ class timeLog extends TimerTask {
 
 public class RestaurantCrabfood {
 
+    static RestaurantBranch[][] branch = {
+        {new RestaurantBranch("Crusty Crab"), new RestaurantBranch("Crusty Crab"), new RestaurantBranch("Crusty Crab")},
+        {new RestaurantBranch("Phum Bucket"), new RestaurantBranch("Phum Bucket"), new RestaurantBranch("Phum Bucket")},
+        {new RestaurantBranch("Burger Krusty"), new RestaurantBranch("Burger Krusty"), new RestaurantBranch("Burger Krusty")},};
+
+    static int branchIndex = 0;
+
+    static Thread order;
+
+    static timeLog task = new timeLog();
+
+    static Customer customer;
+    static int customerNo = 0;
+
+    static ArrayList Customer = new ArrayList();
+
+    static Timer timer = new Timer();
+
     /**
      * @param args the command line arguments
      * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws InterruptedException {
-        String[] dishDetails = new String[6];
-        RestaurantBranch[] crustyCrab = {new RestaurantBranch(), new RestaurantBranch(), new RestaurantBranch()};
-        RestaurantBranch[] phumBucket = {new RestaurantBranch(), new RestaurantBranch(), new RestaurantBranch()};
-        RestaurantBranch[] burgerKrusty = {new RestaurantBranch(), new RestaurantBranch(), new RestaurantBranch()};
-        boolean busyKitchen;
-        int branchIndex=0;
-        Thread order;
 
-        Timer timer = new Timer();
-        timeLog task = new timeLog();
-        int time = 0;
+//        new BootMap();
+        String[] dishDetails = new String[6];
+
+        boolean busyKitchen;
 
         Scanner input = new Scanner(System.in);
         int choice = 1;
 
-        int customerNo = 0;
-        Customer customer;
-        ArrayList Customer = new ArrayList();
-
         try {
             Scanner sc;
             for (int i = 0; i < 3; i++) {
-                 sc = new Scanner(new FileInputStream("Input.txt"));
+                sc = new Scanner(new FileInputStream("Input.txt"));
                 int company = 1;
                 while (sc.hasNextLine()) {
                     for (int j = 0; j < 4; j++) {
@@ -76,87 +84,86 @@ public class RestaurantCrabfood {
                     }
                     switch (company) {
                         case 1:
-                            crustyCrab[i].setDishes(dishDetails);
+                            branch[0][i].setDishes(dishDetails);
                             break;
                         case 2:
-                            phumBucket[i].setDishes(dishDetails);
+                            branch[1][i].setDishes(dishDetails);
                             break;
                         case 3:
-                            burgerKrusty[i].setDishes(dishDetails);
+                            branch[2][i].setDishes(dishDetails);
                             break;
                     }
                     company++;
                 }
-            sc.close();
+                sc.close();
             }
         } catch (FileNotFoundException e) {
             System.out.println("Error: " + e);
         }
 
-        timer.schedule(task, time, 1000);
+        timer.schedule(task, 0, 1000); //starts the timer at an interval of 1 second
+        
+        Main gui = new Main();
+        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        gui.setVisible(true);
+        gui.setLocationRelativeTo(null);
+        gui.setTitle("CRABFOOD");
 
 //START APPLICATION
         do {
-            
-            customerNo++;
-            Customer.add(customer = new Customer(task.getTime()));
-            System.out.println("Welcome to CrabFood Inc.! Choose your Restaurant\n(Display restaurants -(1) to continue)"); //TO BE REPLACED WITH BUTTON
-            input.nextInt();
-            String restaurant = "Crusty Crab"; //TO BE REPLACED WITH BUTTON
-            System.out.println("You have chosen: " + restaurant + ".\n Place your orders now. (Press 1 to continue)"); //TO BE REPLACED WITH BUTTON
-            input.nextInt();
 
-            crustyCrab[branchIndex].order("Crabby Patty"); //TO BE REPLACED WITH BUTTON
-            crustyCrab[branchIndex].order("Crabby Meal"); //TO BE REPLACED WITH BUTTON
-            crustyCrab[branchIndex].order("Sailors Surprise"); //TO BE REPLACED WITH BUTTON
-            busyKitchen = crustyCrab[branchIndex].order("Crabby Patty"); //TO BE REPLACED WITH BUTTON
-            if (busyKitchen) {
-                Customer.remove(--customerNo);
-                continue;
-            }
-
-            switch (restaurant) {
-                case "Crusty Crab":
-                    System.out.println("Total time required to prepare dish: " + crustyCrab[branchIndex].totalTime());
-                    break;
-                case "Phum Bucket":
-                    System.out.println("Total time required to prepare dish: " + phumBucket[branchIndex].totalTime());
-                    break;
-                case "Burger Krusty":
-                    System.out.println("Total time required to prepare dish: " + burgerKrusty[branchIndex].totalTime());
-                    break;
-            }
-            System.out.println("Branch "+branchIndex+" shall take the order."); //WITH THE HELP OF MAP
-
-            System.out.println("Proceed? (1) to continue"); //TO BE REPLACED WITH BUTTON
-            input.nextInt();
-            customer.setOrderTime(task.getTime());
-            switch (restaurant) {
-
-                case "Crusty Crab":
-                    crustyCrab[branchIndex] = new RestaurantBranch(task.getTime(), customer);
-                    order = new Thread(crustyCrab[branchIndex]);
-                    order.start();
-                    break;
-                case "Phum Bucket":
-                    phumBucket[branchIndex] = new RestaurantBranch(task.getTime(), customer);
-                    order = new Thread(phumBucket[branchIndex]);
-                    order.start();
-                    break;
-                case "Burger Krusty":
-                    burgerKrusty[branchIndex] = new RestaurantBranch(task.getTime(), customer);
-                    order = new Thread(burgerKrusty[branchIndex]);
-                    order.start();
-                    break;
-            }
-            time = task.getTime();
-            System.out.println("Press (1) to order again, press any other int value to exit");
-            choice = input.nextInt(); //TO BE REPLACED WITH BUTTON
-            if(branchIndex!=2){
-            branchIndex++;
-            }else{
-                branchIndex=0;
-            }
+//            customerNo++;
+//            Customer.add(customer = new Customer(task.getTime()));                    
+//            String restaurant = "Crusty Crab"; //TO BE REPLACED WITH BUTTON
+//            System.out.println("You have chosen: " + restaurant + ".\n Place your orders now. (Press 1 to continue)"); //TO BE REPLACED WITH BUTTON
+//            input.nextInt();
+//            busyKitchen = branch[0][branchIndex].order("Crabby Patty"); //TO BE REPLACED WITH BUTTON
+//            if (busyKitchen) {
+//                Customer.remove(--customerNo);
+//                continue;
+//            }
+//
+//            switch (restaurant) {
+//                case "Crusty Crab":
+//                    System.out.println("Total time required to prepare dish: " + branch[0][branchIndex].totalTime());
+//                    break;
+//                case "Phum Bucket":
+//                    System.out.println("Total time required to prepare dish: " + branch[1][branchIndex].totalTime());
+//                    break;
+//                case "Burger Krusty":
+//                    System.out.println("Total time required to prepare dish: " + branch[2][branchIndex].totalTime());
+//                    break;
+//            }
+//            System.out.println("Branch "+branchIndex+" shall take the order."); //WITH THE HELP OF MAP
+//            System.out.println("Proceed? (1) to continue"); //TO BE REPLACED WITH BUTTON
+//            input.nextInt();
+//            customer.setOrderTime(task.getTime());
+//            switch (restaurant) {
+//
+//                case "Crusty Crab":
+//                    branch[0][branchIndex] = new RestaurantBranch(task.getTime(), customer);
+//                    order = new Thread(branch[0][branchIndex]);
+//                    order.start();
+//                    break;
+//                case "Phum Bucket":
+//                    branch[1][branchIndex] = new RestaurantBranch(task.getTime(), customer);
+//                    order = new Thread(branch[1][branchIndex]);
+//                    order.start();
+//                    break;
+//                case "Burger Krusty":
+//                    branch[2][branchIndex] = new RestaurantBranch(task.getTime(), customer);
+//                    order = new Thread(branch[2][branchIndex]);
+//                    order.start();
+//                    break;
+//            }
+//            System.out.println("Press (1) to order again, press any other int value to exit");
+//            choice = input.nextInt(); //TO BE REPLACED WITH BUTTON
+//            if(branchIndex!=2){
+//            branchIndex++;
+//            }else{
+//                branchIndex=0;
+//            }
         } while (choice == 1);
 
         System.out.println("SYSTEM ENDS");
@@ -165,10 +172,14 @@ public class RestaurantCrabfood {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new MainFrame(Customer);
+                new LogFrame(Customer);
             }
-
         });
 
     }
+
+    public void stopTimer() {
+        timer.cancel();
+    }
+
 }

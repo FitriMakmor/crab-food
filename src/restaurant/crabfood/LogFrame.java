@@ -15,18 +15,19 @@ import javax.swing.JFrame;
  *
  * @author Fitri
  */
-public class MainFrame extends JFrame {
+public class LogFrame extends JFrame {
 
     private TextPanel textPanel;
     private JButton btn;
     
-    public MainFrame(ArrayList customer) {
+    public LogFrame(ArrayList customer) {
         super("Customer Log");
 
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.getHSBColor(176, 97, 95));
         
         textPanel = new TextPanel(customer);
+        add(textPanel, BorderLayout.CENTER);
         
         add(textPanel, BorderLayout.CENTER);
         
