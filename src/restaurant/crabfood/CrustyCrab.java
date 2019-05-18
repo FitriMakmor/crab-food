@@ -47,13 +47,10 @@ public class CrustyCrab extends JPanel {
     double d1, d2, d3, d4, d5;
     double de1, de2;
 
-//	static private JLabel[] foodLabel;
-//	static private ImageIcon[] foodImage;
     private JPanel mainPanel;
     private JPanel menu;
     private GridBagConstraints c;
 
-//	private static final int ELEMENTS = 3;
     double total = 0;
 
     public CrustyCrab(JFrame frame, JPanel panel) {
@@ -95,7 +92,7 @@ public class CrustyCrab extends JPanel {
         menu.add(btn2);
         menu.add(btn3);
                 
-        JLabel lblBranch = new JLabel("Restaurant Branch: "+RestaurantCrabfood.branchIndex);
+        JLabel lblBranch = new JLabel("Restaurant Branch: "+RestaurantCrabfood.branchIndex+" - Customer No.: "+customerNo);
         c.gridx = 0;
         c.gridy = 14;
         c.gridwidth = 1;
@@ -210,6 +207,7 @@ public class CrustyCrab extends JPanel {
             frame.getContentPane().remove(mainPanel);
             RestaurantCrabfood.Customer.remove(--customerNo);
             branch[0][branchIndex].emptyList();
+            totalPrice=0;
     }
     }
 

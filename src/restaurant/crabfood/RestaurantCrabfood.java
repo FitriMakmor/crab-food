@@ -108,10 +108,10 @@ public class RestaurantCrabfood {
         gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gui.setVisible(true);
         gui.setLocationRelativeTo(null);
-        gui.setTitle("CRABFOOD");
+        gui.setTitle("Crab Food Inc. - Crab Crave for more");
 
 //START APPLICATION
-        do {
+//        do {
 
 //            customerNo++;
 //            Customer.add(customer = new Customer(task.getTime()));                    
@@ -164,22 +164,22 @@ public class RestaurantCrabfood {
 //            }else{
 //                branchIndex=0;
 //            }
-        } while (choice == 1);
+//        } while (choice == 1);
 
-        System.out.println("SYSTEM ENDS");
-        timer.cancel();
+//        System.out.println("SYSTEM ENDS");
+//        timer.cancel();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new LogFrame(Customer);
-            }
-        });
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new LogFrame(Customer);
+//            }
+//        });
 
     }
-
-    public void stopTimer() {
-        timer.cancel();
-    }
+//
+//    public void stopTimer() {
+//        timer.cancel();
+//    }
 
 }

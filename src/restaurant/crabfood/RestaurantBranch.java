@@ -5,13 +5,16 @@
  */
 package restaurant.crabfood;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JTextArea;
+import static restaurant.crabfood.OrderStatus.gif;
 import static restaurant.crabfood.Restaurant.status;
 
 /**
@@ -44,7 +47,7 @@ public class RestaurantBranch implements Runnable {
     private static final HashMap dishTime = new HashMap();
     private static final HashMap dishPrice = new HashMap();
     private static Queue orderList = new Queue();
-    private static Queue[] OrderLists = new Queue[5];
+    private static Queue[] OrderLists = {new Queue(),new Queue(),new Queue(),new Queue(),new Queue()};
     private static int listIndex = 0;
     private boolean cookingState = false;
     private int totalTime;
@@ -54,7 +57,7 @@ public class RestaurantBranch implements Runnable {
     Customer customer;
 
     public RestaurantBranch(String name) {
-        this.restaurantName=name;
+        this.restaurantName = name;
     }
 
     public RestaurantBranch(int time, Customer customer) {
@@ -145,14 +148,14 @@ public class RestaurantBranch implements Runnable {
     public boolean isEmpty() {
         return orderList.isEmpty();
     }
-    
-    public void emptyList(){
-        while(!isEmpty()){
+
+    public void emptyList() {
+        while (!isEmpty()) {
             orderList.remove();
         }
     }
 
-    private void cook(String dishName, int time, Queue list,JTextArea chef) throws InterruptedException {
+    private void cook(String dishName, int time, Queue list, JTextArea chef) throws InterruptedException {
         for (int i = 1; i <= time; i++) {
             chef.setText("Preparing " + dishName + ": " + i + " second(s) has elapsed"); //TO BE DISPLAYED
             TimeUnit.SECONDS.sleep(1);
@@ -166,7 +169,7 @@ public class RestaurantBranch implements Runnable {
         }
     }
 
-    public void startChef(Queue list,JTextArea chef) {
+    public void startChef(Queue list, JTextArea chef) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -175,7 +178,7 @@ public class RestaurantBranch implements Runnable {
                 while (!list.isEmpty()) {
                     dish = (String) list.removeFirst();
                     try {
-                        cook(dish, (int) dishTime.get(dish), list,chef);
+                        cook(dish, (int) dishTime.get(dish), list, chef);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -190,14 +193,20 @@ public class RestaurantBranch implements Runnable {
         cookingState = true;
         int thisCustomer = customerNo;
         totalTime = totalTime();
-        OrderLists[listIndex] = orderList;
-        startChef(OrderLists[listIndex],OrderStatus.firstChef);
-        startChef(OrderLists[listIndex],OrderStatus.secondChef);
-        startChef(OrderLists[listIndex],OrderStatus.thirdChef);
+        while(!orderList.isEmpty()){
+            System.out.println(orderList);
+            OrderLists[listIndex].addLast(orderList.removeFirst());
+        }
+        startChef(OrderLists[listIndex], OrderStatus.firstChef[thisCustomer - 1]);
+        startChef(OrderLists[listIndex], OrderStatus.secondChef[thisCustomer - 1]);
+        startChef(OrderLists[listIndex], OrderStatus.thirdChef[thisCustomer - 1]);
+        URL url1 = getClass().getResource("img/cooking.gif");
+        ImageIcon imageIcon1 = new ImageIcon(url1);
+        gif[thisCustomer - 1].setIcon(imageIcon1);
         if (listIndex < 4) {
             listIndex++;
-        }else{
-            listIndex=0;
+        } else {
+            listIndex = 0;
         }
 
         synchronized (this) {
@@ -208,6 +217,9 @@ public class RestaurantBranch implements Runnable {
             }
         }
         cookingState = false;
+        URL url2 = getClass().getResource("img/finished.gif");
+        ImageIcon imageIcon2 = new ImageIcon(url2);
+        gif[thisCustomer - 1].setIcon(imageIcon2);
         status.append("\nOrder finished for Customer " + thisCustomer + ", time is: " + (task.getTime()));
         status.append("\nDelivery from branch (x,x) to location (x,x) is now starting."); //WITH THE HELP OF MAP
         customer.setFinishedCookingTime(task.getTime());
