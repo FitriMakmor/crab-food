@@ -179,9 +179,10 @@ public class RestaurantBranch implements Runnable {
                     dish = (String) list.removeFirst();
                     try {
                         cook(dish, (int) dishTime.get(dish), list, chef);
-                    } catch (InterruptedException ex) {
+                    } catch (InterruptedException | NullPointerException ex) {
                         Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    
                 }
             }
         }).start();
@@ -194,7 +195,6 @@ public class RestaurantBranch implements Runnable {
         int thisCustomer = customerNo;
         totalTime = totalTime();
         while(!orderList.isEmpty()){
-            System.out.println(orderList);
             OrderLists[listIndex].addLast(orderList.removeFirst());
         }
         startChef(OrderLists[listIndex], OrderStatus.firstChef[thisCustomer - 1]);
