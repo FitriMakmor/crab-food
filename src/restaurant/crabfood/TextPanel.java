@@ -5,14 +5,13 @@
  */
 package restaurant.crabfood;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 
 /**
  *
@@ -39,8 +38,11 @@ public class TextPanel extends JPanel {
         }
         
         table = new JTable(data, columnNames);
+        table.setGridColor(Color.BLACK);
+        table.setShowGrid(true);
         table.setPreferredScrollableViewportSize(new Dimension(800,300));
         table.setFillsViewportHeight(true);
+        
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane);
     }

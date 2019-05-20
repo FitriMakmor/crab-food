@@ -2,6 +2,7 @@ package restaurant.crabfood;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import static restaurant.crabfood.RestaurantCrabfood.customer;
 import static restaurant.crabfood.RestaurantCrabfood.customerNo;
 import static restaurant.crabfood.RestaurantCrabfood.task;
 
-public class CrustyCrab extends JPanel {
+public class BurgerKrusty extends JPanel {
 
     static private JPanel panel;
     JFrame frame;
@@ -31,7 +32,9 @@ public class CrustyCrab extends JPanel {
     static private JTextField textTotal;
     static private JTextField textTime;
 
-    
+    private ImageIcon image1;
+    private ImageIcon image2;
+    private ImageIcon image3;
 
     static private JTable table;
     static private DefaultTableModel dtm;
@@ -53,7 +56,7 @@ public class CrustyCrab extends JPanel {
 
     double total = 0;
 
-    public CrustyCrab(JFrame frame, JPanel panel) {
+    public BurgerKrusty(JFrame frame, JPanel panel) {
         this.frame = frame;
         this.panel = panel;
     }
@@ -80,11 +83,26 @@ public class CrustyCrab extends JPanel {
         JButton btn1 = new JButton();
         JButton btn2 = new JButton();
         JButton btn3 = new JButton();
-        btn1.setIcon(new ImageIcon(getClass().getResource("img/krabbyPattyRS.jpg")));
+        
+        image1 = new ImageIcon(getClass().getResource("img/theKlogger.jpg"));
+        Image img1 = image1.getImage();
+        Image newimg1 = img1.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+        image1 = new ImageIcon(newimg1);
+        btn1.setIcon(image1);
         btn1.addActionListener(new eventKP());
-        btn2.setIcon(new ImageIcon(getClass().getResource("img/crabbyMealRS.jpg")));
+        
+        image2 = new ImageIcon(getClass().getResource("img/fishSandwich.jpg"));
+        Image img2 = image2.getImage();
+        Image newimg2 = img2.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+        image2 = new ImageIcon(newimg2);
+        btn2.setIcon(image2);
         btn2.addActionListener(new eventCM());
-        btn3.setIcon(new ImageIcon(getClass().getResource("img/sailorsSurpriseRS.jpg")));
+        
+        image3 = new ImageIcon(getClass().getResource("img/twistyLard.jpg"));
+        Image img3 = image3.getImage();
+        Image newimg3 = img3.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+        image3 = new ImageIcon(newimg3);
+        btn3.setIcon(image3);
         btn3.addActionListener(new eventSS());
         
 
@@ -206,7 +224,7 @@ public class CrustyCrab extends JPanel {
             panel.setVisible(true);
             frame.getContentPane().remove(mainPanel);
             RestaurantCrabfood.Customer.remove(--customerNo);
-            branch[0][branchIndex].emptyList();
+            branch[2][branchIndex].emptyList();
             totalPrice=0;
     }
     }
@@ -215,10 +233,11 @@ public class CrustyCrab extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            branch[0][branchIndex] = new RestaurantBranch(task.getTime(), customer);
-            RestaurantCrabfood.order = new Thread(branch[0][branchIndex]);            
+            branch[2][branchIndex] = new RestaurantBranch(task.getTime(), customer);
+            RestaurantCrabfood.order = new Thread(branch[2][branchIndex]);            
             customer.setOrderTime(task.getTime());
             RestaurantCrabfood.order.start();
+            totalPrice=0;
             
             OrderStatus status;
 			try {
@@ -236,12 +255,12 @@ public class CrustyCrab extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            branch[0][branchIndex].order("Crabby Patty");
-            dtm.insertRow(rowNum++, new Object[]{"Crabby Patty", branch[0][branchIndex].getTime("Crabby Patty"), df.format(branch[0][branchIndex].getPrice("Crabby Patty"))});
+            branch[2][branchIndex].order("The Klogger");
+            dtm.insertRow(rowNum++, new Object[]{"The Klogger", branch[2][branchIndex].getTime("The Klogger"), df.format(branch[2][branchIndex].getPrice("The Klogger"))});
             dtm.removeRow(dtm.getRowCount() - 1);
-            totalPrice += branch[0][branchIndex].getPrice("Crabby Patty");
+            totalPrice += branch[2][branchIndex].getPrice("The Klogger");
             textTotal.setText(String.valueOf(df.format(totalPrice)));
-            textTime.setText(String.valueOf(branch[0][branchIndex].totalTime()));
+            textTime.setText(String.valueOf(branch[2][branchIndex].totalTime()));
         }
     }
 
@@ -249,12 +268,12 @@ public class CrustyCrab extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            branch[0][branchIndex].order("Crabby Meal");
-            dtm.insertRow(rowNum++, new Object[]{"Crabby Meal", branch[0][branchIndex].getTime("Crabby Meal"), df.format(branch[0][branchIndex].getPrice("Crabby Meal"))});
+            branch[2][branchIndex].order("Fish Sandwich");
+            dtm.insertRow(rowNum++, new Object[]{"Fish Sandwich", branch[2][branchIndex].getTime("Fish Sandwich"), df.format(branch[2][branchIndex].getPrice("Fish Sandwich"))});
             dtm.removeRow(dtm.getRowCount() - 1);
-            totalPrice += branch[0][branchIndex].getPrice("Crabby Meal");
+            totalPrice += branch[2][branchIndex].getPrice("Fish Sandwich");
             textTotal.setText(String.valueOf(df.format(totalPrice)));
-            textTime.setText(String.valueOf(branch[0][branchIndex].totalTime()));
+            textTime.setText(String.valueOf(branch[2][branchIndex].totalTime()));
         }
     }
 
@@ -262,12 +281,12 @@ public class CrustyCrab extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            branch[0][branchIndex].order("Sailors Surprise");
-            dtm.insertRow(rowNum++, new Object[]{"Sailors Surprise", branch[0][branchIndex].getTime("Sailors Surprise"), df.format(branch[0][branchIndex].getPrice("Sailors Surprise"))});
+            branch[2][branchIndex].order("Twisty Lard");
+            dtm.insertRow(rowNum++, new Object[]{"Twisty Lard", branch[2][branchIndex].getTime("Twisty Lard"), df.format(branch[2][branchIndex].getPrice("Twisty Lard"))});
             dtm.removeRow(dtm.getRowCount() - 1);
-            totalPrice += branch[0][branchIndex].getPrice("Sailors Surprise");
+            totalPrice += branch[2][branchIndex].getPrice("Twisty Lard");
             textTotal.setText(String.valueOf(df.format(totalPrice)));
-            textTime.setText(String.valueOf(branch[0][branchIndex].totalTime()));
+            textTime.setText(String.valueOf(branch[2][branchIndex].totalTime()));
         }
     }
 

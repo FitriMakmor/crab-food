@@ -62,22 +62,27 @@ public class OrderStatus extends JPanel {
 
         c.gridx = 0;
         c.gridy = 0;
+        c.weightx=1.0;
+        c.weighty=1.0;
         c.gridwidth = 2;
         c.gridheight = 1;
         c.fill = GridBagConstraints.HORIZONTAL;
 
         mainPanel.add(lblFoodOrdered, c);
         
-        c.fill = GridBagConstraints.VERTICAL;
+        
+        c.fill = GridBagConstraints.BOTH;
         for (int i = 0, j = 1; i < 10; i++, j += 3) {
 
-            
+            c.weightx=0.0;
             c.gridx = 0;
             c.gridy = j;
             c.gridwidth = 1;
             c.gridheight = 3;
             mainPanel.add(gif[i], c);
 
+            c.weightx=1.0;
+            c.weighty=0.0;
             c.gridx = 1;
             c.gridy = j;
             c.gridwidth = 1;
@@ -104,7 +109,8 @@ public class OrderStatus extends JPanel {
         c.gridx = 0;
         c.gridy = 31;
         c.gridwidth = 2;
-        c.gridheight = 1;
+        c.ipady=40;
+        c.gridheight = 5;
         mainPanel.add(backButton, c);
         backEvent e = new backEvent();
         backButton.addActionListener(e);
@@ -127,7 +133,7 @@ public class OrderStatus extends JPanel {
             } else {
                 RestaurantCrabfood.branchIndex = 0;
             }
-            CrustyCrab.totalPrice = 0;
+            KrustyKrab.totalPrice = 0;
         }
     }
 

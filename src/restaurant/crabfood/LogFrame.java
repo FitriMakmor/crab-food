@@ -18,20 +18,15 @@ import javax.swing.JFrame;
 public class LogFrame extends JFrame {
 
     private TextPanel textPanel;
-    private JButton btn;
     
     public LogFrame(ArrayList customer) {
         super("Customer Log");
 
         setLayout(new BorderLayout());
-        getContentPane().setBackground(Color.getHSBColor(176, 97, 95));
-        
+        setSize(1000, 500);
         textPanel = new TextPanel(customer);
         add(textPanel, BorderLayout.CENTER);
-        
-        add(textPanel, BorderLayout.CENTER);
-        
-        setSize(1000, 500);
+        pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
