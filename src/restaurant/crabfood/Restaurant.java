@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +18,9 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import static restaurant.crabfood.RestaurantCrabfood.Customer;
+import static restaurant.crabfood.RestaurantCrabfood.RESTAURANT_BRANCHES;
+import static restaurant.crabfood.RestaurantCrabfood.RESTAURANT_COMPANIES;
+import static restaurant.crabfood.RestaurantCrabfood.coords;
 import static restaurant.crabfood.RestaurantCrabfood.customerNo;
 import static restaurant.crabfood.RestaurantCrabfood.task;
 import static restaurant.crabfood.RestaurantCrabfood.timer;
@@ -25,10 +29,10 @@ public class Restaurant extends JPanel {
 
     private JPanel panel = this;
 
-    private JPanel topLeftPanel;
-    private JPanel topRightPanel;
-    private JPanel botLeftPanel;
-    private JPanel botRightPanel;
+    private JPanel firstPanel;
+    private JPanel secondPanel;
+    private JPanel thirdPanel;
+    private JPanel fourthPanel;
     private JPanel sidePanel;
 
     private ImageIcon image1;
@@ -79,13 +83,13 @@ public class Restaurant extends JPanel {
         sidePanel.setLayout(new GridLayout(4, 1));
         setLayout(new GridBagLayout());
 
-        final int TAB_BTN_WIDTH=250;
-        final int TAB_BTN_HEIGHT=250;
+        final int TAB_BTN_WIDTH = 250;
+        final int TAB_BTN_HEIGHT = 250;
         imagea = new ImageIcon(getClass().getResource("img/restaurantTab.jpeg"));
         Image imga = imagea.getImage();
         Image newimga = imga.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         imagea = new ImageIcon(newimga);
-        
+
         buttona = new JButton(imagea);
         buttona.setPreferredSize(new Dimension(TAB_BTN_WIDTH, TAB_BTN_HEIGHT));
         tabRestaurant tabRest = new tabRestaurant();
@@ -96,7 +100,7 @@ public class Restaurant extends JPanel {
         Image imgb = imageb.getImage();
         Image newimgb = imgb.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         imageb = new ImageIcon(newimgb);
-        
+
         buttonb = new JButton(imageb);
         buttonb.setPreferredSize(new Dimension(TAB_BTN_WIDTH, TAB_BTN_HEIGHT));
         tabMap tabM = new tabMap();
@@ -107,7 +111,7 @@ public class Restaurant extends JPanel {
         Image imgc = imagec.getImage();
         Image newimgc = imgc.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         imagec = new ImageIcon(newimgc);
-        
+
         buttonc = new JButton(imagec);
         buttonc.setPreferredSize(new Dimension(TAB_BTN_WIDTH, TAB_BTN_HEIGHT));
         tabStatus tabStat = new tabStatus();
@@ -118,7 +122,7 @@ public class Restaurant extends JPanel {
         Image imgd = imaged.getImage();
         Image newimgd = imgd.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         imaged = new ImageIcon(newimgd);
-        
+
         buttond = new JButton(imaged);
         buttond.setPreferredSize(new Dimension(TAB_BTN_WIDTH, TAB_BTN_HEIGHT));
         tabEndDay tabEnd = new tabEndDay();
@@ -135,18 +139,19 @@ public class Restaurant extends JPanel {
         c.gridwidth = 1;
         c.gridheight = 4;
 
-        sidePanel.setPreferredSize(new Dimension(250,1001));
-        
+        sidePanel.setPreferredSize(new Dimension(250, 1001));
+        sidePanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 3, Color.BLACK));
+
         add(sidePanel, c);
 
-        topLeftPanel = new JPanel();
-        topRightPanel = new JPanel();
-        botLeftPanel = new JPanel();
-        botRightPanel = new JPanel();
+        firstPanel = new JPanel();
+        secondPanel = new JPanel();
+        thirdPanel = new JPanel();
+        fourthPanel = new JPanel();
 
-        topLeftPanel.setLayout(new GridLayout(1, 3));
+        firstPanel.setLayout(new GridLayout(1, 3));
 
-        image1 = new ImageIcon(getClass().getResource("img/kk.png"));
+        image1 = new ImageIcon(getClass().getResource("img/kk.jpeg"));
         Image img1 = image1.getImage();
         Image newimg1 = img1.getScaledInstance(590, 1001, java.awt.Image.SCALE_SMOOTH);
         image1 = new ImageIcon(newimg1);
@@ -154,9 +159,9 @@ public class Restaurant extends JPanel {
         button1 = new JButton(image1);
         openKK openKK = new openKK();
         button1.addActionListener(openKK);
-        topLeftPanel.add(button1);
+        firstPanel.add(button1);
 
-        image2 = new ImageIcon(getClass().getResource("img/cb.png"));
+        image2 = new ImageIcon(getClass().getResource("img/cb.jpeg"));
         Image img2 = image2.getImage();
         Image newimg2 = img2.getScaledInstance(590, 1001, java.awt.Image.SCALE_SMOOTH);
         image2 = new ImageIcon(newimg2);
@@ -164,7 +169,7 @@ public class Restaurant extends JPanel {
         button2 = new JButton(image2);
         openCB openCB = new openCB();
         button2.addActionListener(openCB);
-        topLeftPanel.add(button2);
+        firstPanel.add(button2);
 
         image3 = new ImageIcon(getClass().getResource("img/wh.jpeg"));
         Image img3 = image3.getImage();
@@ -174,9 +179,9 @@ public class Restaurant extends JPanel {
         button3 = new JButton(image3);
         openBK openBK = new openBK();
         button3.addActionListener(openBK);
-        topLeftPanel.add(button3);
-        topLeftPanel.setPreferredSize(new Dimension(1670,1001));
-        topLeftPanel.setVisible(true);
+        firstPanel.add(button3);
+        firstPanel.setPreferredSize(new Dimension(1670, 1001));
+        firstPanel.setVisible(true);
 
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
@@ -186,7 +191,8 @@ public class Restaurant extends JPanel {
         c.gridwidth = 10;
         c.gridheight = 4;
 
-        add(topLeftPanel, c);
+        firstPanel.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, Color.BLACK));
+        add(firstPanel, c);
 
         sandimg = new ImageIcon(getClass().getResource("img/sandTile.png"));
         Image sandimg1 = sandimg.getImage();
@@ -216,21 +222,34 @@ public class Restaurant extends JPanel {
         int[][] map = {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1},
-            {0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 6, 1, 0, 1},
-            {0, 1, 7, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1},
-            {0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 7, 1},
-            {0, 1, 0, 0, 0, 1, 0, 7, 1, 0, 0, 1, 1, 1, 1},
+            {0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1},
+            {0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1},
+            {0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1},
+            {0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1},
             {1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
-            {1, 0, 0, 1, 1, 1, 0, 0, 1, 5, 0, 1, 1, 0, 0},
+            {1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0},
             {1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1},
-            {1, 0, 0, 1, 5, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1},
-            {1, 6, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
-            {1, 1, 1, 1, 1, 1, 1, 6, 0, 0, 1, 0, 0, 1, 1},
-            {0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 5, 1, 1, 0},
+            {1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1},
+            {1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1},
+            {0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0},
             {0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0},
             {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},};
-
-        topRightPanel.setLayout(new GridLayout(ROW, COL));
+        
+for(int i=0;i<RESTAURANT_COMPANIES;i++){
+    for(int j=0;j<RESTAURANT_BRANCHES;j++){
+        switch(i){
+            case 0: map[coords[i][j].getX()][coords[i][j].getY()]=5;
+            break;
+            case 1: map[coords[i][j].getX()][coords[i][j].getY()]=6;
+            break;
+            case 2: map[coords[i][j].getX()][coords[i][j].getY()]=7;
+            break;
+            default: System.out.println("Error in inserting restaurants in map!");
+        }
+    }
+}
+        secondPanel.setLayout(new GridLayout(ROW, COL));
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
                 switch (map[i][j]) {
@@ -256,12 +275,12 @@ public class Restaurant extends JPanel {
                 }
                 tile[i][j].setBorder(new LineBorder(Color.BLACK));
                 tile[i][j].setOpaque(true);
-                topRightPanel.add(tile[i][j]);
+                secondPanel.add(tile[i][j]);
             }
         }
 
-        topRightPanel.setPreferredSize(new Dimension(1670,1001));
-        topRightPanel.setVisible(false);
+        secondPanel.setPreferredSize(new Dimension(1670, 1001));
+        secondPanel.setVisible(false);
 
         c.weightx = 1.0;
         c.weighty = 1.0;
@@ -270,13 +289,14 @@ public class Restaurant extends JPanel {
         c.gridwidth = 10;
         c.gridheight = 4;
 
-        add(topRightPanel, c);
+        secondPanel.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, Color.BLACK));
+        add(secondPanel, c);
 
         status = new JTextArea(">>>>> Dish Preparation Log <<<<<");
-        botLeftPanel.setLayout(new GridLayout());
-        botLeftPanel.add(status);
+        thirdPanel.setLayout(new GridLayout());
+        thirdPanel.add(status);
 
-        botLeftPanel.setVisible(false);
+        thirdPanel.setVisible(false);
 
         c.weightx = 1.0;
         c.weighty = 1.0;
@@ -285,7 +305,8 @@ public class Restaurant extends JPanel {
         c.gridwidth = 10;
         c.gridheight = 4;
 
-        add(botLeftPanel, c);
+        thirdPanel.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, Color.BLACK));
+        add(thirdPanel, c);
 
         endImage = new ImageIcon(getClass().getResource("img/endDay.jpg"));
         Image endi = endImage.getImage();
@@ -295,11 +316,11 @@ public class Restaurant extends JPanel {
 
         endDay end = new endDay();
         endButton.addActionListener(end);
-        botRightPanel.setLayout(new GridLayout());
-        botRightPanel.add(endButton);
+        fourthPanel.setLayout(new GridLayout());
+        fourthPanel.add(endButton);
 
-        botRightPanel.setPreferredSize(new Dimension(1670,1001));
-        botRightPanel.setVisible(false);
+        fourthPanel.setPreferredSize(new Dimension(1670, 1001));
+        fourthPanel.setVisible(false);
 
         c.weightx = 1.0;
         c.weighty = 1.0;
@@ -308,7 +329,8 @@ public class Restaurant extends JPanel {
         c.gridwidth = 10;
         c.gridheight = 4;
 
-        add(botRightPanel, c);
+        fourthPanel.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, Color.BLACK));
+        add(fourthPanel, c);
 
     }
 
@@ -316,10 +338,10 @@ public class Restaurant extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            topLeftPanel.setVisible(true);
-            topRightPanel.setVisible(false);
-            botLeftPanel.setVisible(false);
-            botRightPanel.setVisible(false);
+            firstPanel.setVisible(true);
+            secondPanel.setVisible(false);
+            thirdPanel.setVisible(false);
+            fourthPanel.setVisible(false);
         }
     }
 
@@ -327,10 +349,10 @@ public class Restaurant extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            topLeftPanel.setVisible(false);
-            topRightPanel.setVisible(true);
-            botLeftPanel.setVisible(false);
-            botRightPanel.setVisible(false);
+            firstPanel.setVisible(false);
+            secondPanel.setVisible(true);
+            thirdPanel.setVisible(false);
+            fourthPanel.setVisible(false);
         }
     }
 
@@ -338,10 +360,10 @@ public class Restaurant extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            topLeftPanel.setVisible(false);
-            topRightPanel.setVisible(false);
-            botLeftPanel.setVisible(true);
-            botRightPanel.setVisible(false);
+            firstPanel.setVisible(false);
+            secondPanel.setVisible(false);
+            thirdPanel.setVisible(true);
+            fourthPanel.setVisible(false);
         }
     }
 
@@ -349,10 +371,10 @@ public class Restaurant extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            topLeftPanel.setVisible(false);
-            topRightPanel.setVisible(false);
-            botLeftPanel.setVisible(false);
-            botRightPanel.setVisible(true);
+            firstPanel.setVisible(false);
+            secondPanel.setVisible(false);
+            thirdPanel.setVisible(false);
+            fourthPanel.setVisible(true);
         }
     }
 

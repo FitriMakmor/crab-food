@@ -49,6 +49,11 @@ public class RestaurantCrabfood {
     static Customer customer;
     static int customerNo = 0;
 
+    static final int RESTAURANT_COMPANIES = 3;
+    static final int RESTAURANT_BRANCHES = 3;
+    static Coords[][] coords = new Coords[RESTAURANT_COMPANIES][RESTAURANT_BRANCHES];
+    static String[] restName = new String[RESTAURANT_COMPANIES];
+
     static ArrayList Customer = new ArrayList();
 
     static Timer timer = new Timer();
@@ -62,16 +67,28 @@ public class RestaurantCrabfood {
         String[] dishDetails = new String[6];
 
 //        boolean busyKitchen;
-
         try {
             Scanner sc;
-            for (int i = 0; i < 3; i++) {
-                sc = new Scanner(new FileInputStream("Input.txt"));
-                int company = 1;
-                while (sc.hasNextLine()) {
-                    for (int j = 0; j < 4; j++) {
-                        sc.nextLine();
-                    }
+
+            sc = new Scanner(new FileInputStream("Input.txt"));
+            int company = 1;
+            while (sc.hasNextLine()) {
+                for (int i = 0; i < 3; i++) {
+                    restName[i] = sc.nextLine();
+                    coords[i][0] = new Coords();
+                    coords[i][0].setX(Integer.parseInt(sc.next()));
+                    coords[i][0].setY(Integer.parseInt(sc.next()));
+                    sc.nextLine();
+
+                    coords[i][1] = new Coords();
+                    coords[i][1].setX(Integer.parseInt(sc.next()));
+                    coords[i][1].setY(Integer.parseInt(sc.next()));
+                    sc.nextLine();
+
+                    coords[i][2] = new Coords();
+                    coords[i][2].setX(Integer.parseInt(sc.next()));
+                    coords[i][2].setY(Integer.parseInt(sc.next()));
+                    sc.nextLine();
                     for (int j = 0; j < 6; j++) {
                         dishDetails[j] = sc.nextLine();
                     }
@@ -91,8 +108,9 @@ public class RestaurantCrabfood {
                     }
                     company++;
                 }
-                sc.close();
             }
+            sc.close();
+
         } catch (FileNotFoundException e) {
             System.out.println("Error: " + e);
         }
@@ -105,8 +123,6 @@ public class RestaurantCrabfood {
         gui.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gui.setVisible(true);
         gui.setTitle("Crab Food Inc. - Crab Crave for more");
-
-
     }
 
 }

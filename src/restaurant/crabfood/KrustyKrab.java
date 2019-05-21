@@ -1,6 +1,8 @@
 package restaurant.crabfood;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -19,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import static restaurant.crabfood.RestaurantCrabfood.branch;
 import static restaurant.crabfood.RestaurantCrabfood.branchIndex;
@@ -37,15 +40,28 @@ public class KrustyKrab extends JPanel {
     
     static private JTable table;
     static private DefaultTableModel dtm;
+    static private JScrollPane pane;
 
+    
     private ImageIcon image1;
-    private JButton button1;
+    private JLabel label1;
     
     private ImageIcon image2;
-    private JButton button2;
+    private JLabel label2;
     
     private ImageIcon image3;
+    private JLabel label3;
+    
+    private ImageIcon image4;
+    private JButton button1;
+    
+    private ImageIcon image5;
+    private JButton button2;
+    
+    private ImageIcon image6;
     private JButton button3;
+    
+    
     static DecimalFormat df = new DecimalFormat();
 
     Double[] price;
@@ -90,45 +106,66 @@ public class KrustyKrab extends JPanel {
         final int TAB_BTN_WIDTH=250;
         final int TAB_BTN_HEIGHT=250;
         
+//        final int TAB_BTN_WIDTH=322;
+//        final int TAB_BTN_HEIGHT=370;
+        
         image1 = new ImageIcon(getClass().getResource("img/krabbyPatty.jpg"));
         Image img1 = image1.getImage();
         Image newimg1 = img1.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         image1 = new ImageIcon(newimg1);
         
-        button1 = new JButton(image1);
-        button1.addActionListener(new eventKP());
-        menu.add(button1);
+        label1 = new JLabel(image1);
+        menu.add(label1);
         
         image2 = new ImageIcon(getClass().getResource("img/crabbyMeal.jpg"));
         Image img2 = image2.getImage();
         Image newimg2 = img2.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         image2 = new ImageIcon(newimg2);
         
-        button2 = new JButton(image2);
-        button2.addActionListener(new eventCM());
-        menu.add(button2);
+        label2 = new JLabel(image2);
+        menu.add(label2);
         
         image3 = new ImageIcon(getClass().getResource("img/sailorsSurprise.jpg"));
         Image img3 = image3.getImage();
         Image newimg3 = img3.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         image3 = new ImageIcon(newimg3);
         
-        button3 = new JButton(image3);
+        label3 = new JLabel(image3);
+        menu.add(label3);
+        
+        image4 = new ImageIcon(getClass().getResource("img/crabbyPattyText.jpeg"));
+        Image img4 = image4.getImage();
+        Image newimg4 = img4.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
+        image4 = new ImageIcon(newimg4);
+        
+        button1 = new JButton(image4);
+        button1.addActionListener(new eventKP());
+        menu.add(button1);
+        
+        image5 = new ImageIcon(getClass().getResource("img/crabbyMealText.jpeg"));
+        Image img5 = image5.getImage();
+        Image newimg5 = img5.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
+        image5 = new ImageIcon(newimg5);
+        
+        button2 = new JButton(image5);
+        button2.addActionListener(new eventCM());
+        menu.add(button2);
+        
+        image6 = new ImageIcon(getClass().getResource("img/sailorsSurpriseText.jpeg"));
+        Image img6 = image6.getImage();
+        Image newimg6 = img6.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
+        image6 = new ImageIcon(newimg6);
+        
+        button3 = new JButton(image6);
         button3.addActionListener(new eventSS());
         menu.add(button3);
         
-        JButton a1 = new JButton("Crabby Patty");
-        
-        menu.add(a1);
-        
-        JButton a2 = new JButton("Crabby Meal");
-        menu.add(a2);
-        
-        JButton a3 = new JButton("Sailors Surprise");;
-        menu.add(a3);
+        menu.setPreferredSize(new Dimension(968, 740));
         
         mainPanel.add(menu, c);
         
+        c.weightx=1.0;
+        c.weighty=1.0;
         
         JLabel lblBranch = new JLabel("Restaurant Branch: "+RestaurantCrabfood.branchIndex);
         lblBranch.setBackground(Color.WHITE);
@@ -150,8 +187,9 @@ public class KrustyKrab extends JPanel {
         mainPanel.add(lblCustNo, c);
         mainPanel.validate();
         
-        JLabel lblFoodOrdered = new JLabel("Food Ordered");
-
+        JLabel lblFoodOrdered = new JLabel("Food Ordered",SwingConstants.CENTER);
+        lblFoodOrdered.setFont(new Font("Times New Roman", Font.BOLD,40));
+        
         c.gridx = 11;
         c.gridy = 0;
         c.gridwidth = 1;
@@ -168,6 +206,9 @@ public class KrustyKrab extends JPanel {
         table.getColumnModel().getColumn(1).setPreferredWidth(60);
         table.getColumnModel().getColumn(2).setPreferredWidth(60);
         table.setRowHeight(50);
+        table.setBackground(Color.WHITE);
+        table.setFillsViewportHeight(true);
+        table.setOpaque(true);
 
         c.gridx = 11;
         c.gridy = 1;
@@ -180,7 +221,9 @@ public class KrustyKrab extends JPanel {
         c.gridwidth = 5;
         c.gridheight = 11;
         
-        JScrollPane pane = new JScrollPane(table);
+        pane = new JScrollPane(table);
+        pane.setPreferredSize(new Dimension(950,558));
+        
         mainPanel.add(pane, c);
 
         JLabel lblTotal = new JLabel("Total Price : ");
@@ -210,7 +253,6 @@ public class KrustyKrab extends JPanel {
         
         textTime = new JTextField();
         textTime.setColumns(10);
-//		textTime.setBounds(585, 340, 86, 20);
 
         c.gridx = 12;
         c.gridy = 15;
@@ -219,7 +261,6 @@ public class KrustyKrab extends JPanel {
         mainPanel.add(textTime, c);
 
         orderButton = new JButton("Order");
-//		orderButton.setBounds(500, 385, 89, 23);
 
         c.gridx = 14;
         c.gridy = 14;
@@ -230,7 +271,6 @@ public class KrustyKrab extends JPanel {
         orderButton.addActionListener(oe);
 
         backButton = new JButton("Back");
-//		backButton.setBounds(610, 385, 89, 23);
 
         c.gridx = 15;
         c.gridy = 14;
@@ -282,6 +322,8 @@ public class KrustyKrab extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            System.out.println(menu.getSize());
+            System.out.println(pane.getSize());
             branch[0][branchIndex].order("Crabby Patty");
             dtm.addRow(new Object[]{"Crabby Patty", branch[0][branchIndex].getTime("Crabby Patty"), df.format(branch[0][branchIndex].getPrice("Crabby Patty"))});
             totalPrice += branch[0][branchIndex].getPrice("Crabby Patty");
