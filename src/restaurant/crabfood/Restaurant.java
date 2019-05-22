@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,6 +28,7 @@ import static restaurant.crabfood.RestaurantCrabfood.timer;
 
 public class Restaurant extends JPanel {
 
+    public static ArrayList<Pair> astar;
     private JPanel panel = this;
 
     private JPanel firstPanel;
@@ -61,6 +63,9 @@ public class Restaurant extends JPanel {
     private ImageIcon kkimg;
     private ImageIcon cbimg;
     private ImageIcon whimg;
+    private ImageIcon sTrafficImg;
+    private ImageIcon mTrafficImg;
+    private ImageIcon hTrafficImg;
 
     private ImageIcon endImage;
     private JButton endButton;
@@ -75,8 +80,11 @@ public class Restaurant extends JPanel {
     private GridBagConstraints c;
 
     static TileLabel[][] tile = new TileLabel[ROW][COL];
+    
+    public static RMap innerMap;
+    public static int[][] map;
 
-    Restaurant(JFrame frame) {
+    Restaurant(JFrame frame) throws IOException {
         this.frame = frame;
 
         sidePanel = new JPanel();
@@ -218,8 +226,23 @@ public class Restaurant extends JPanel {
         Image whimg1 = whimg.getImage();
         Image whImg = whimg1.getScaledInstance(117, 66, java.awt.Image.SCALE_SMOOTH);
         whimg = new ImageIcon(whImg);
+        
+        sTrafficImg = new ImageIcon(getClass().getResource("img/slightTraffic.jpeg"));
+        Image sTimg1 = sTrafficImg.getImage();
+        Image sTImg = sTimg1.getScaledInstance(117, 66, java.awt.Image.SCALE_SMOOTH);
+        sTrafficImg = new ImageIcon(sTImg);
+        
+        mTrafficImg = new ImageIcon(getClass().getResource("img/moderateTraffic.jpeg"));
+        Image mTimg1 = mTrafficImg.getImage();
+        Image mTImg = mTimg1.getScaledInstance(117, 66, java.awt.Image.SCALE_SMOOTH);
+        mTrafficImg = new ImageIcon(mTImg);
+        
+        hTrafficImg = new ImageIcon(getClass().getResource("img/heavyTraffic.jpeg"));
+        Image hTimg1 = hTrafficImg.getImage();
+        Image hTImg = hTimg1.getScaledInstance(117, 66, java.awt.Image.SCALE_SMOOTH);
+        hTrafficImg = new ImageIcon(hTImg);
 
-        int[][] map = {
+        int[][] starterMap = {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1},
             {0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1},
@@ -236,48 +259,30 @@ public class Restaurant extends JPanel {
             {0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0},
             {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},};
         
-for(int i=0;i<RESTAURANT_COMPANIES;i++){
-    for(int j=0;j<RESTAURANT_BRANCHES;j++){
-        switch(i){
-            case 0: map[coords[i][j].getX()][coords[i][j].getY()]=5;
-            break;
-            case 1: map[coords[i][j].getX()][coords[i][j].getY()]=6;
-            break;
-            case 2: map[coords[i][j].getX()][coords[i][j].getY()]=7;
-            break;
-            default: System.out.println("Error in inserting restaurants in map!");
-        }
-    }
-}
-        secondPanel.setLayout(new GridLayout(ROW, COL));
-        for (int i = 0; i < ROW; i++) {
-            for (int j = 0; j < COL; j++) {
-                switch (map[i][j]) {
+        innerMap = new RMap(starterMap);
+        map = innerMap.throwMap(); //Produce random traffic with different weight values
+
+        
+        
+        //This nested loop adds in the restaurant branches retrieved from text file
+        for (int i = 0; i < RESTAURANT_COMPANIES; i++) {
+            for (int j = 0; j < RESTAURANT_BRANCHES; j++) {
+                switch (i) {
+                    case 0:
+                        map[coords[i][j].getX()][coords[i][j].getY()] = 5;
+                        break;
                     case 1:
-                        tile[i][j] = new TileLabel(1);
-                        tile[i][j].setIcon(pathimg);
+                        map[coords[i][j].getX()][coords[i][j].getY()] = 6;
                         break;
-                    case 5:
-                        tile[i][j] = new TileLabel(2);
-                        tile[i][j].setIcon(kkimg);
-                        break;
-                    case 6:
-                        tile[i][j] = new TileLabel(3);
-                        tile[i][j].setIcon(cbimg);
-                        break;
-                    case 7:
-                        tile[i][j] = new TileLabel(4);
-                        tile[i][j].setIcon(whimg);
+                    case 2:
+                        map[coords[i][j].getX()][coords[i][j].getY()] = 7;
                         break;
                     default:
-                        tile[i][j] = new TileLabel(0);
-                        tile[i][j].setIcon(sandimg);
+                        System.out.println("Error in inserting restaurants in map.");
                 }
-                tile[i][j].setBorder(new LineBorder(Color.BLACK));
-                tile[i][j].setOpaque(true);
-                secondPanel.add(tile[i][j]);
             }
         }
+        updateMap();
 
         secondPanel.setPreferredSize(new Dimension(1670, 1001));
         secondPanel.setVisible(false);
@@ -442,10 +447,55 @@ for(int i=0;i<RESTAURANT_COMPANIES;i++){
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    new LogFrame(Customer);
+                    new Login();
                 }
             });
         }
     }
 
+    public void updateMap(){
+        //Inserts image based on int values in the map. 0 sand, 1 path, 2 slight traffic, 3 moderate traffic, 4 heavy traffic, 5 Krusty Krab, 6 Chum Bucket, 7 Weenie Hut Jr
+        secondPanel.setLayout(new GridLayout(ROW, COL));
+        secondPanel.removeAll();
+        for (int i = 0; i < ROW; i++) {
+            for (int j = 0; j < COL; j++) {
+                switch (map[i][j]) {
+                    case 1:
+                        tile[i][j] = new TileLabel(1);
+                        tile[i][j].setIcon(pathimg);
+                        break;
+                    case 2:
+                        tile[i][j] = new TileLabel(2);
+                        tile[i][j].setIcon(sTrafficImg);
+                        break;
+                    case 3:
+                        tile[i][j] = new TileLabel(3);
+                        tile[i][j].setIcon(mTrafficImg);
+                        break;
+                    case 4:
+                        tile[i][j] = new TileLabel(4);
+                        tile[i][j].setIcon(hTrafficImg);
+                        break;
+                    case 5:
+                        tile[i][j] = new TileLabel(5);
+                        tile[i][j].setIcon(kkimg);
+                        break;
+                    case 6:
+                        tile[i][j] = new TileLabel(6);
+                        tile[i][j].setIcon(cbimg);
+                        break;
+                    case 7:
+                        tile[i][j] = new TileLabel(7);
+                        tile[i][j].setIcon(whimg);
+                        break;
+                    default:
+                        tile[i][j] = new TileLabel(0);
+                        tile[i][j].setIcon(sandimg);
+                }
+                tile[i][j].setBorder(new LineBorder(Color.BLACK));
+                tile[i][j].setOpaque(true);
+                secondPanel.add(tile[i][j]);
+            }
+        }
+    }
 }

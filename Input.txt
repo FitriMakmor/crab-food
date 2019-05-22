@@ -2,6 +2,7 @@ Crusty Crab
 9 4
 7 9
 12 11
+5 0
 Crabby Patty
 10,5.00
 Crabby Meal
@@ -13,6 +14,7 @@ Phum Bucket
 10 1
 2 11
 11 7
+2 5
 Phum Burger
 13,5.50
 Phum Fries
@@ -24,6 +26,7 @@ Burger Krusty
 3 2
 5 7
 4 13
+12 9
 The Klogger
 16,12.00
 Fish Sandwich

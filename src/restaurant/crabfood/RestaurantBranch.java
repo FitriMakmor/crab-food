@@ -5,17 +5,27 @@
  */
 package restaurant.crabfood;
 
+import java.awt.Image;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTextArea;
 import static restaurant.crabfood.OrderStatus.gif;
+import static restaurant.crabfood.RMap.rmap;
+import static restaurant.crabfood.Restaurant.astar;
+import static restaurant.crabfood.Restaurant.innerMap;
 import static restaurant.crabfood.Restaurant.status;
+import static restaurant.crabfood.Restaurant.tile;
+import static restaurant.crabfood.RestaurantCrabfood.customerX;
+import static restaurant.crabfood.RestaurantCrabfood.customerY;
 
 /**
  *
@@ -47,7 +57,7 @@ public class RestaurantBranch implements Runnable {
     private static final HashMap dishTime = new HashMap();
     private static final HashMap dishPrice = new HashMap();
     private static Queue orderList = new Queue();
-    private static Queue[] OrderLists = {new Queue(),new Queue(),new Queue(),new Queue(),new Queue()};
+    private static Queue[] OrderLists = {new Queue(), new Queue(), new Queue(), new Queue(), new Queue()};
     private static int listIndex = 0;
     private boolean cookingState = false;
     private int totalTime;
@@ -55,12 +65,14 @@ public class RestaurantBranch implements Runnable {
     Timer timer;
     timeLog2 task;
     Customer customer;
+    private ImageIcon deliveryImg;
 
     public RestaurantBranch(String name) {
         this.restaurantName = name;
     }
 
-    public RestaurantBranch(int time, Customer customer) {
+    public RestaurantBranch(String name, int time, Customer customer) {
+        this.restaurantName = name;
         timer = new Timer();
         task = new timeLog2(time);
         customerNo++;
@@ -182,7 +194,7 @@ public class RestaurantBranch implements Runnable {
                     } catch (InterruptedException | NullPointerException ex) {
                         Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                 }
             }
         }).start();
@@ -190,11 +202,33 @@ public class RestaurantBranch implements Runnable {
 
     @Override
     public void run() {
+        System.out.println(restaurantName);
+        switch (restaurantName) {
+            case "Crusty Crab":
+                deliveryImg = new ImageIcon(getClass().getResource("img/deliveryManKK.jpeg"));
+                break;
+            case "Phum Bucket":
+                deliveryImg = new ImageIcon(getClass().getResource("img/deliveryManCB.jpeg"));
+                break;
+            case "Burger Krusty":
+                deliveryImg = new ImageIcon(getClass().getResource("img/deliveryManWH.jpeg"));
+                break;
+        }
+        Image dvimg = deliveryImg.getImage();
+        Image newdvimg = dvimg.getScaledInstance(117, 66, java.awt.Image.SCALE_SMOOTH);
+        deliveryImg = new ImageIcon(newdvimg);
+
         timer.schedule(task, startTime, 1000);
         cookingState = true;
+
         int thisCustomer = customerNo;
+        int thisCustomerX = customerX;
+        int thisCustomerY = customerY;
+
+        ArrayList<Pair> astar = innerMap.BestBranch(restaurantName, thisCustomerX, thisCustomerY);
+
         totalTime = totalTime();
-        while(!orderList.isEmpty()){
+        while (!orderList.isEmpty()) {
             OrderLists[listIndex].addLast(orderList.removeFirst());
         }
         startChef(OrderLists[listIndex], OrderStatus.firstChef[thisCustomer - 1]);
@@ -220,8 +254,36 @@ public class RestaurantBranch implements Runnable {
         URL url2 = getClass().getResource("img/finished.gif");
         ImageIcon imageIcon2 = new ImageIcon(url2);
         gif[thisCustomer - 1].setIcon(imageIcon2);
-        status.append("\nOrder finished for Customer " + thisCustomer + ", time is: " + (task.getTime()));
-        status.append("\nDelivery from branch (x,x) to location (x,x) is now starting."); //WITH THE HELP OF MAP
+        status.append("\n" + task.getTime() + ": Order finished for Customer " + thisCustomer);
+
+        Collections.reverse(astar);
+        System.out.println(astar);
+        int branchX = astar.get(1).getX();
+        int branchY = astar.get(1).getY();
+//        String branch = astar.get(listIndex);
+        customer.setDeliveryTime(astar.get(2).getX() + 1);
+
+        for (int i = 0; i < 4; i++) {
+            astar.remove(0);
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Icon icon;
+                    while (!astar.isEmpty()) {
+                        icon = tile[astar.get(0).getX()][astar.get(0).getY()].getIcon();
+                        tile[astar.get(0).getX()][astar.get(0).getY()].setIcon(deliveryImg);
+                        TimeUnit.SECONDS.sleep(rmap[astar.get(0).getX()][astar.get(0).getY()].getDifficulty());
+                        tile[astar.get(0).getX()][astar.get(0).getY()].setIcon(icon);
+                        astar.remove(0);
+                    }
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(RestaurantBranch.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }).start();
+        status.append("\n" + task.getTime() + ": Delivery from branch (" + branchX + "," + branchY + ") to location (" + thisCustomerX + "," + thisCustomerY + ") is now starting.");
         customer.setFinishedCookingTime(task.getTime());
         timer.cancel();
     }

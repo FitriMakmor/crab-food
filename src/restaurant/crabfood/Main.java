@@ -3,6 +3,9 @@ package restaurant.crabfood;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,12 +48,16 @@ public class Main extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            getContentPane().removeAll();
-            getContentPane().invalidate();
-            Restaurant choose = new Restaurant(frame);
-            choose.setVisible(true);
-            getContentPane().add(choose);
-            getContentPane().revalidate();
+            try {
+                getContentPane().removeAll();
+                getContentPane().invalidate();
+                Restaurant choose = new Restaurant(frame);
+                choose.setVisible(true);
+                getContentPane().add(choose);
+                getContentPane().revalidate();
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

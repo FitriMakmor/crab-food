@@ -1,44 +1,76 @@
 package restaurant.crabfood;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.DecimalFormat;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+import javax.swing.Icon;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import static restaurant.crabfood.OrderStatus.cust;
+import static restaurant.crabfood.Restaurant.innerMap;
+import static restaurant.crabfood.Restaurant.map;
+import static restaurant.crabfood.Restaurant.tile;
 import static restaurant.crabfood.RestaurantCrabfood.branch;
 import static restaurant.crabfood.RestaurantCrabfood.branchIndex;
 import static restaurant.crabfood.RestaurantCrabfood.customer;
 import static restaurant.crabfood.RestaurantCrabfood.customerNo;
+import static restaurant.crabfood.RestaurantCrabfood.customerX;
+import static restaurant.crabfood.RestaurantCrabfood.customerY;
 import static restaurant.crabfood.RestaurantCrabfood.task;
 
 public class ChumBucket extends JPanel {
 
     static private JPanel panel;
     JFrame frame;
-    
+
     static private JButton backButton, orderButton;
     static private JTextField textTotal;
     static private JTextField textTime;
 
-    private ImageIcon image1;
-    private ImageIcon image2;
-    private ImageIcon image3;
-
     static private JTable table;
     static private DefaultTableModel dtm;
-    static private int rowNum = 0;
+    static private JScrollPane pane;
+
+    private ImageIcon image1;
+    private JLabel label1;
+
+    private ImageIcon image2;
+    private JLabel label2;
+
+    private ImageIcon image3;
+    private JLabel label3;
+
+    private ImageIcon image4;
+    private JButton button1;
+
+    private ImageIcon image5;
+    private JButton button2;
+
+    private ImageIcon image6;
+    private JButton button3;
+    
+    
+    
 
     static DecimalFormat df = new DecimalFormat();
 
@@ -62,9 +94,9 @@ public class ChumBucket extends JPanel {
     }
 
     void create() throws IOException {
-        
-        rowNum=0;
 
+        
+        
         df.setMaximumFractionDigits(2);
         df.setMinimumFractionDigits(2);
         mainPanel = new JPanel();
@@ -73,44 +105,82 @@ public class ChumBucket extends JPanel {
         mainPanel.setLayout(new GridBagLayout());
 
         menu = new JPanel();
+        menu.setLayout(new GridLayout(2, 3));
 
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 10;
         c.gridheight = 13;
 
-        mainPanel.add(menu, c);
-        JButton btn1 = new JButton();
-        JButton btn2 = new JButton();
-        JButton btn3 = new JButton();
-        
+        final int TAB_BTN_WIDTH = 250;
+        final int TAB_BTN_HEIGHT = 250;
+
+//        final int TAB_BTN_WIDTH=322;
+//        final int TAB_BTN_HEIGHT=370;
         image1 = new ImageIcon(getClass().getResource("img/phumBurger.jpg"));
         Image img1 = image1.getImage();
-        Image newimg1 = img1.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+        Image newimg1 = img1.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         image1 = new ImageIcon(newimg1);
-        btn1.setIcon(image1);
-        btn1.addActionListener(new eventKP());
-        
+
+        label1 = new JLabel(image1);
+        menu.add(label1);
+
         image2 = new ImageIcon(getClass().getResource("img/phumFries.jpg"));
         Image img2 = image2.getImage();
-        Image newimg2 = img2.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+        Image newimg2 = img2.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         image2 = new ImageIcon(newimg2);
-        btn2.setIcon(image2);
-        btn2.addActionListener(new eventCM());
-        
+
+        label2 = new JLabel(image2);
+        menu.add(label2);
+
         image3 = new ImageIcon(getClass().getResource("img/phumPie.png"));
         Image img3 = image3.getImage();
-        Image newimg3 = img3.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH);
+        Image newimg3 = img3.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         image3 = new ImageIcon(newimg3);
-        btn3.setIcon(image3);
-        btn3.addActionListener(new eventSS());
-        
 
-        menu.add(btn1);
-        menu.add(btn2);
-        menu.add(btn3);
-                
-        JLabel lblBranch = new JLabel("Restaurant Branch: "+RestaurantCrabfood.branchIndex+" - Customer No.: "+customerNo);
+        label3 = new JLabel(image3);
+        menu.add(label3);
+
+        image4 = new ImageIcon(getClass().getResource("img/phumBurgerText.jpeg"));
+        Image img4 = image4.getImage();
+        Image newimg4 = img4.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
+        image4 = new ImageIcon(newimg4);
+
+        button1 = new JButton(image4);
+        button1.addActionListener(new eventPB());
+        menu.add(button1);
+
+        image5 = new ImageIcon(getClass().getResource("img/phumFriesText.jpeg"));
+        Image img5 = image5.getImage();
+        Image newimg5 = img5.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
+        image5 = new ImageIcon(newimg5);
+
+        button2 = new JButton(image5);
+        button2.addActionListener(new eventPF());
+        menu.add(button2);
+
+        image6 = new ImageIcon(getClass().getResource("img/phumPieText.jpeg"));
+        Image img6 = image6.getImage();
+        Image newimg6 = img6.getScaledInstance(TAB_BTN_WIDTH, TAB_BTN_HEIGHT, java.awt.Image.SCALE_SMOOTH);
+        image6 = new ImageIcon(newimg6);
+
+        button3 = new JButton(image6);
+        button3.addActionListener(new eventPP());
+        menu.add(button3);
+
+        menu.setPreferredSize(new Dimension(968, 740));
+
+        mainPanel.add(menu, c);
+
+        c.weightx = 1.0;
+        c.weighty = 1.0;
+
+        JLabel lblBranch = new JLabel("Restaurant Branch: " + RestaurantCrabfood.branchIndex);
+        lblBranch.setBackground(Color.WHITE);
+        lblBranch.setOpaque(true);
         c.gridx = 0;
         c.gridy = 14;
         c.gridwidth = 1;
@@ -118,8 +188,18 @@ public class ChumBucket extends JPanel {
         mainPanel.add(lblBranch, c);
         mainPanel.validate();
 
-        JLabel lblFoodOrdered = new JLabel("Food Ordered");
-//		lblFoodOrdered.setBounds(529, 11, 81, 14);
+        JLabel lblCustNo = new JLabel("Customer No.: " + customerNo);
+        lblCustNo.setBackground(Color.LIGHT_GRAY);
+        lblCustNo.setOpaque(true);
+        c.gridx = 0;
+        c.gridy = 15;
+        c.gridwidth = 1;
+        c.gridheight = 1;
+        mainPanel.add(lblCustNo, c);
+        mainPanel.validate();
+
+        JLabel lblFoodOrdered = new JLabel("Food Ordered", SwingConstants.CENTER);
+        lblFoodOrdered.setFont(new Font("Times New Roman", Font.BOLD, 40));
 
         c.gridx = 11;
         c.gridy = 0;
@@ -128,18 +208,18 @@ public class ChumBucket extends JPanel {
         mainPanel.add(lblFoodOrdered, c);
         mainPanel.validate();
 
-        dtm = new DefaultTableModel(10, 3);
+        dtm = new DefaultTableModel(0, 3);
         final String header[] = new String[]{"Item", "Time", "Price"};
-//                Double[][] data = new Double[10][3];
         dtm.setColumnIdentifiers(header);
         table = new JTable(dtm);
-//		table.setBounds(475, 31, 1, 1); // int x, int y, int width, int height
         table.setSize(245, 300); // width,height
         table.getColumnModel().getColumn(0).setPreferredWidth(200);
         table.getColumnModel().getColumn(1).setPreferredWidth(60);
         table.getColumnModel().getColumn(2).setPreferredWidth(60);
         table.setRowHeight(50);
-//		table.setShowGrid(false); // remove cell border
+        table.setBackground(Color.WHITE);
+        table.setFillsViewportHeight(true);
+        table.setOpaque(true);
 
         c.gridx = 11;
         c.gridy = 1;
@@ -151,19 +231,21 @@ public class ChumBucket extends JPanel {
         c.gridy = 2;
         c.gridwidth = 5;
         c.gridheight = 11;
-        mainPanel.add(table, c);
+
+        pane = new JScrollPane(table);
+        pane.setPreferredSize(new Dimension(950, 558));
+
+        mainPanel.add(pane, c);
 
         JLabel lblTotal = new JLabel("Total Price : ");
-//		lblTotal.setBounds(519, 340, 46, 14);
 
         c.gridx = 11;
         c.gridy = 14;
         c.gridwidth = 1;
         c.gridheight = 1;
         mainPanel.add(lblTotal, c);
-        
+
         JLabel lblTime = new JLabel("Total Time : ");
-//		lblTime.setBounds(519, 340, 46, 14);
 
         c.gridx = 11;
         c.gridy = 15;
@@ -173,17 +255,15 @@ public class ChumBucket extends JPanel {
 
         textTotal = new JTextField();
         textTotal.setColumns(10);
-//		textTotal.setBounds(585, 340, 86, 20);
 
         c.gridx = 12;
         c.gridy = 14;
         c.gridwidth = 1;
         c.gridheight = 1;
         mainPanel.add(textTotal, c);
-        
+
         textTime = new JTextField();
         textTime.setColumns(10);
-//		textTime.setBounds(585, 340, 86, 20);
 
         c.gridx = 12;
         c.gridy = 15;
@@ -192,7 +272,6 @@ public class ChumBucket extends JPanel {
         mainPanel.add(textTime, c);
 
         orderButton = new JButton("Order");
-//		orderButton.setBounds(500, 385, 89, 23);
 
         c.gridx = 14;
         c.gridy = 14;
@@ -203,7 +282,6 @@ public class ChumBucket extends JPanel {
         orderButton.addActionListener(oe);
 
         backButton = new JButton("Back");
-//		backButton.setBounds(610, 385, 89, 23);
 
         c.gridx = 15;
         c.gridy = 14;
@@ -225,69 +303,111 @@ public class ChumBucket extends JPanel {
             frame.getContentPane().remove(mainPanel);
             RestaurantCrabfood.Customer.remove(--customerNo);
             branch[1][branchIndex].emptyList();
-            totalPrice=0;
-    }
+            totalPrice = 0;
+        }
     }
 
     public class orderEvent implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            branch[1][branchIndex] = new RestaurantBranch(task.getTime(), customer);
-            RestaurantCrabfood.order = new Thread(branch[1][branchIndex]);            
+            
+            Random r = new Random(); // Spawns the of customer inside map
+            
+            while (true) {
+                customerX = r.nextInt(15);
+                customerY = r.nextInt(15);
+                if (map[customerX][customerY] == 1) {
+                    tile[customerX][customerY].setIcon(getCustImg());
+                    break;
+                }
+            }
+            
+            branch[1][branchIndex] = new RestaurantBranch("Phum Bucket",task.getTime(), customer);
+            RestaurantCrabfood.order = new Thread(branch[1][branchIndex]);
             customer.setOrderTime(task.getTime());
             RestaurantCrabfood.order.start();
-            totalPrice=0;
+            totalPrice = 0;
+            cust[customerNo - 1].setIcon(getCustImg());
+
             
+
             OrderStatus status;
-			try {
-				status = new OrderStatus(frame,panel);
-				status.create();
-                                mainPanel.setVisible(false);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+            try {
+                status = new OrderStatus(frame, panel);
+                status.create();
+                mainPanel.setVisible(false);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         }
     }
 
-    public class eventKP implements ActionListener {
+    public class eventPB implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             branch[1][branchIndex].order("Phum Burger");
-            dtm.insertRow(rowNum++, new Object[]{"Phum Burger", branch[1][branchIndex].getTime("Phum Burger"), df.format(branch[1][branchIndex].getPrice("Phum Burger"))});
-            dtm.removeRow(dtm.getRowCount() - 1);
+            dtm.addRow(new Object[]{"Phum Burger", branch[1][branchIndex].getTime("Phum Burger"), df.format(branch[1][branchIndex].getPrice("Phum Burger"))});
             totalPrice += branch[1][branchIndex].getPrice("Phum Burger");
             textTotal.setText(String.valueOf(df.format(totalPrice)));
             textTime.setText(String.valueOf(branch[1][branchIndex].totalTime()));
         }
     }
 
-    public class eventCM implements ActionListener {
+    public class eventPF implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             branch[1][branchIndex].order("Phum Fries");
-            dtm.insertRow(rowNum++, new Object[]{"Phum Fries", branch[1][branchIndex].getTime("Phum Fries"), df.format(branch[1][branchIndex].getPrice("Phum Fries"))});
-            dtm.removeRow(dtm.getRowCount() - 1);
+            dtm.addRow(new Object[]{"Phum Fries", branch[1][branchIndex].getTime("Phum Fries"), df.format(branch[1][branchIndex].getPrice("Phum Fries"))});
             totalPrice += branch[1][branchIndex].getPrice("Phum Fries");
             textTotal.setText(String.valueOf(df.format(totalPrice)));
             textTime.setText(String.valueOf(branch[1][branchIndex].totalTime()));
         }
     }
 
-    public class eventSS implements ActionListener {
+    public class eventPP implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             branch[1][branchIndex].order("Phum Pie");
-            dtm.insertRow(rowNum++, new Object[]{"Phum Pie", branch[1][branchIndex].getTime("Phum Pie"), df.format(branch[1][branchIndex].getPrice("Phum Pie"))});
-            dtm.removeRow(dtm.getRowCount() - 1);
+            dtm.addRow(new Object[]{"Phum Pie", branch[1][branchIndex].getTime("Phum Pie"), df.format(branch[1][branchIndex].getPrice("Phum Pie"))});
             totalPrice += branch[1][branchIndex].getPrice("Phum Pie");
             textTotal.setText(String.valueOf(df.format(totalPrice)));
             textTime.setText(String.valueOf(branch[1][branchIndex].totalTime()));
         }
+    }
+
+    public ImageIcon getCustImg() {
+
+        int customer = customerNo % 5;
+        String text = "img/";
+        switch (customer) {
+            case 0:
+                text += "cust1.jpeg";
+                break;
+            case 1:
+                text += "cust2.jpeg";
+                break;
+            case 2:
+                text += "cust3.jpeg";
+                break;
+            case 3:
+                text += "cust4.jpeg";
+                break;
+            case 4:
+                text += "cust5.jpeg";
+                break;
+            default:
+                text += "cust1.jpeg";
+        }
+        ImageIcon tempImg = new ImageIcon(getClass().getResource(text));
+        Image tempI = tempImg.getImage();
+        Image tempimg = tempI.getScaledInstance(117, 66, java.awt.Image.SCALE_SMOOTH);
+        tempImg = new ImageIcon(tempimg);
+        return tempImg;
     }
 
 }
