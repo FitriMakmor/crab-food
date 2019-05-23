@@ -41,7 +41,6 @@ public class RMap {
         while (scan.hasNext()) {
             boolean isPair = true;
             String resName = scan.nextLine();
-            //System.out.println("resName = "+resName);
             String holder = scan.nextLine();
             for (String n : holder.split(" ")) {
                 if (!this.CanParseInt(n)) {
@@ -49,7 +48,6 @@ public class RMap {
                 }
             }
             while (holder.split(" ").length < 3 & isPair == true) {
-                //System.out.println("holder = "+holder);
                 this.setRes(Integer.parseInt(holder.split(" ")[0]), Integer.parseInt(holder.split(" ")[1]), resName);//set restaurant
                 holder = scan.nextLine();//reload
                 for (String n : holder.split(" ")) {
@@ -86,9 +84,7 @@ public class RMap {
         }
         for (i = 0; i < rmap.length; i++) {
             for (j = 0; j < rmap.length; j++) {
-                //System.out.println(i+" "+j);
                 if (rmap[i][j].getName().equals(restaurant)) {
-//                        System.out.println("Alert");
                     if (holder.get(holder.size() - 3).getX() > this.A_star(i, j, Dx, Dy).get(this.A_star(i, j, Dx, Dy).size() - 3).getX()) {
                         holder = this.A_star(i, j, Dx, Dy);
                     }
@@ -138,10 +134,6 @@ public class RMap {
             System.out.println();
         }
     }
-//    public void testmap() throws FileNotFoundException, IOException {//create a testmap which must
-//        ObjectInputStream reader = new ObjectInputStream(new FileInputStream("TestMap.txt"));
-//        
-//    }
 
     private void setRes(int i, int j, String Name) {
         rmap[i][j].setIsImPassable(true);
@@ -181,12 +173,9 @@ public class RMap {
         PriorityQueue<Cell> ONode = new PriorityQueue<>(1, new CellCom());
         ArrayList<Cell> CNode = new ArrayList<>();
         while (!done) {
-            //System.out.println(Ox+" Picked "+Oy);
-            //System.out.println("Parent node : .................................................."+Amap[Ox][Oy][1]+","+Amap[Ox][Oy][2]);
             CNode.add(rmap[Ox][Oy]);
             ONode.poll();
             int CostSoFar = Amap[Ox][Oy][3];
-            //System.out.println("Cost so far = "+CostSoFar);
             if (Ox + 1 < rmap.length) {
                 if (!rmap[Ox + 1][Oy].getIsImPassable() & !CNode.contains(rmap[Ox + 1][Oy]) & !ONode.contains(rmap[Ox + 1][Oy])) {
                     Amap[Ox + 1][Oy][3] = CostSoFar + rmap[Ox + 1][Oy].getDifficulty();
@@ -194,9 +183,6 @@ public class RMap {
                     ONode.add(rmap[Ox + 1][Oy]);
                     Amap[Ox + 1][Oy][1] = Ox;//Right hand
                     Amap[Ox + 1][Oy][2] = Oy;
-//                    System.out.println("R");
-//                    System.out.println("Cell to the right = "+(Ox+1)+","+Oy);
-//                    System.out.println("XNXN"+Amap[Ox+1][Oy][0]);
                 }
             }
             if (Oy + 1 < rmap.length) {
@@ -206,9 +192,6 @@ public class RMap {
                     ONode.add(rmap[Ox][Oy + 1]);
                     Amap[Ox][Oy + 1][1] = Ox;
                     Amap[Ox][Oy + 1][2] = Oy;
-//                    System.out.println("D");
-//                    System.out.println("Cell under = "+Ox+","+(Oy+1));
-//                    System.out.println("XNXN"+Amap[Ox][Oy+1][0]);
                 }
             }
             if (Ox - 1 >= 0) {
@@ -218,9 +201,6 @@ public class RMap {
                     ONode.add(rmap[Ox - 1][Oy]);
                     Amap[Ox - 1][Oy][1] = Ox;
                     Amap[Ox - 1][Oy][2] = Oy;
-//                    System.out.println("L");
-//                    System.out.println("Cell to the left = "+(Ox-1)+","+Oy);
-//                    System.out.println("XNXN"+Amap[Ox-1][Oy][0]);
                 }
             }
             if (Oy - 1 >= 0) {
@@ -230,25 +210,17 @@ public class RMap {
                     ONode.add(rmap[Ox][Oy - 1]);
                     Amap[Ox][Oy - 1][1] = Ox;
                     Amap[Ox][Oy - 1][2] = Oy;
-//                    System.out.println("U");
-//                    System.out.println("Cell to the top = "+Ox+","+(Oy-1));
-//                    System.out.println("XNXN"+Amap[Ox][Oy-1][0]);
                 }
             }//Add all open nodes into ONode
             Ox = ONode.peek().getCoX();
             Oy = ONode.peek().getCoY();
             if (Ox == Dx & Oy == Dy) {//Reach the destination; Trace back
-                //System.out.println("Peeking the destination");
                 ONode.poll();
-                //System.out.println("Sum: "+CostSoFar);
-                //System.out.println("Heuristic of next node : "+Amap[ONode.peek().getCoX()][ONode.peek().getCoY()][0]);
                 if (CostSoFar <= Amap[ONode.peek().getCoX()][ONode.peek().getCoY()][0]) {//If it really is the way then pack up things and return 
-                    //System.out.println(".........................");
                     ArrayList<Pair> PlanRev = new ArrayList<>();
                     while (Dx != -1 & Dy != -1) {
                         PlanRev.add(new Pair(Dx, Dy));
                         int Dx2 = Dx;
-//                        System.out.println("This is ...........................Dx :"+Dx+" And Dy: "+Dy);
                         Dx = (int) Amap[Dx][Dy][1];
                         Dy = (int) Amap[Dx2][Dy][2];
                     }
@@ -258,7 +230,6 @@ public class RMap {
                     PlanRev.add(sumFinal);
                     PlanRev.add(Origin);
                     PlanRev.add(Destination);
-//                    for(int i=0;i<PlanRev.size();i++) System.out.println(PlanRev.get(i).getX()+","+PlanRev.get(i).getY());
                     tobeReturn = PlanRev;
                     done = true;
                 }

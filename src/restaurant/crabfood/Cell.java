@@ -40,10 +40,6 @@ public class Cell {
         return isImPassable;
     }
 
-//    public void setHeuCost(int heuCost) {
-//        this.heuCost = heuCost;
-//    }
-
     public void setIsImPassable(boolean isImPassable) {
         this.isImPassable = isImPassable;
     }
@@ -55,12 +51,6 @@ public class Cell {
     public int getCoY() {
         return CoY;
     }
-
-//    public void setRestoraunt(boolean isRestoraunt,String name) {
-//        this.isImPassable=true;
-//        this.isRestoraunt = isRestoraunt;
-//        this.NameRes = name;
-//    }
 
     public void setCoX(int CoX) {
         this.CoX = CoX;

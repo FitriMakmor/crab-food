@@ -339,7 +339,6 @@ public class KrustyKrab extends JPanel {
                 music.sfx("sizzling");
                 mainPanel.setVisible(false);
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         }
