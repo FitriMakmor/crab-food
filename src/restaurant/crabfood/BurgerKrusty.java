@@ -11,10 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
-import javax.swing.Icon;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,7 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import static restaurant.crabfood.OrderStatus.cust;
-import static restaurant.crabfood.Restaurant.innerMap;
 import static restaurant.crabfood.Restaurant.map;
 import static restaurant.crabfood.Restaurant.tile;
 import static restaurant.crabfood.RestaurantCrabfood.branch;
@@ -328,6 +324,7 @@ public class BurgerKrusty extends JPanel {
             try {
                 status = new OrderStatus(frame, panel);
                 status.create();
+                music.sfx("sizzling");
                 mainPanel.setVisible(false);
             } catch (IOException e1) {
                 // TODO Auto-generated catch block

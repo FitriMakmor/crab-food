@@ -15,6 +15,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+/**
+ *
+ * @author Haikal
+ */
 public class Main extends JFrame {
 
     private ImageIcon image1;

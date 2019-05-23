@@ -7,7 +7,7 @@ package restaurant.crabfood;
 
 /**
  *
- * @author Fitri
+ * @author Asfa
  */
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,7 +35,6 @@ public class Login {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				if( user.getText().equals("Fa58") && pw.getText().equals("hehe12") ) {
-					System.out.println("Access Granted");
                                         new LogFrame(Customer);
 					//add logging panel
 				}

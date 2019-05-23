@@ -6,9 +6,7 @@
 package restaurant.crabfood;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.util.ArrayList;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 /**

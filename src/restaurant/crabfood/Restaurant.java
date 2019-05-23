@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
-import static restaurant.crabfood.RestaurantCrabfood.Customer;
 import static restaurant.crabfood.RestaurantCrabfood.RESTAURANT_BRANCHES;
 import static restaurant.crabfood.RestaurantCrabfood.RESTAURANT_COMPANIES;
 import static restaurant.crabfood.RestaurantCrabfood.coords;
@@ -395,7 +394,6 @@ public class Restaurant extends JPanel {
                 food.create();
                 setVisible(false);
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         }
@@ -413,7 +411,6 @@ public class Restaurant extends JPanel {
                 food.create();
                 setVisible(false);
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         }
@@ -431,7 +428,6 @@ public class Restaurant extends JPanel {
                 food.create();
                 setVisible(false);
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         }

@@ -20,7 +20,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JTextArea;
 import static restaurant.crabfood.OrderStatus.gif;
 import static restaurant.crabfood.RMap.rmap;
-import static restaurant.crabfood.Restaurant.astar;
 import static restaurant.crabfood.Restaurant.innerMap;
 import static restaurant.crabfood.Restaurant.status;
 import static restaurant.crabfood.Restaurant.tile;
@@ -169,10 +168,10 @@ public class RestaurantBranch implements Runnable {
 
     private void cook(String dishName, int time, Queue list, JTextArea chef) throws InterruptedException {
         for (int i = 1; i <= time; i++) {
-            chef.setText("Preparing " + dishName + ": " + i + " second(s) has elapsed"); //TO BE DISPLAYED
+            chef.setText("Preparing " + dishName + ": " + i + " second(s) has elapsed");
             TimeUnit.SECONDS.sleep(1);
         }
-        chef.setText(dishName + " has successfully been cooked!"); //TO BE DISPLAYED
+        chef.setText(dishName + " has successfully been cooked!");
         time = task.getTime() - startTime;
         if (list.isEmpty() && (time >= (totalTime - 1))) {
             synchronized (this) {
@@ -202,7 +201,6 @@ public class RestaurantBranch implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(restaurantName);
         switch (restaurantName) {
             case "Crusty Crab":
                 deliveryImg = new ImageIcon(getClass().getResource("img/deliveryManKK.jpeg"));
@@ -257,10 +255,8 @@ public class RestaurantBranch implements Runnable {
         status.append("\n" + task.getTime() + ": Order finished for Customer " + thisCustomer);
 
         Collections.reverse(astar);
-        System.out.println(astar);
         int branchX = astar.get(1).getX();
         int branchY = astar.get(1).getY();
-//        String branch = astar.get(listIndex);
         customer.setDeliveryTime(astar.get(2).getX() + 1);
 
         for (int i = 0; i < 4; i++) {
@@ -285,6 +281,7 @@ public class RestaurantBranch implements Runnable {
         }).start();
         status.append("\n" + task.getTime() + ": Delivery from branch (" + branchX + "," + branchY + ") to location (" + thisCustomerX + "," + thisCustomerY + ") is now starting.");
         customer.setFinishedCookingTime(task.getTime());
+        music.sfx("motorStart");
         timer.cancel();
     }
 
