@@ -215,7 +215,6 @@ public class RestaurantBranch implements Runnable {
         Image dvimg = deliveryImg.getImage();
         Image newdvimg = dvimg.getScaledInstance(117, 66, java.awt.Image.SCALE_SMOOTH);
         deliveryImg = new ImageIcon(newdvimg);
-
         timer.schedule(task, startTime, 1000);
         cookingState = true;
 

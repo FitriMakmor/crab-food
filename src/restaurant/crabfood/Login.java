@@ -34,7 +34,7 @@ public class Login {
 		button.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				if( user.getText().equals("Fa58") && pw.getText().equals("hehe12") ) {
+				if( user.getText().equals("Fa58") && pw.getText().equals("********") ) {
                                         new LogFrame(Customer);
 					//add logging panel
 				}

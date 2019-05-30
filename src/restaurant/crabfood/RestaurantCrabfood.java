@@ -12,7 +12,6 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -53,7 +52,7 @@ public class RestaurantCrabfood {
     static final int RESTAURANT_BRANCHES = 4;
     static Coords[][] coords = new Coords[RESTAURANT_COMPANIES][RESTAURANT_BRANCHES];
     static String[] restName = new String[RESTAURANT_COMPANIES];
-
+    
     static ArrayList Customer = new ArrayList();
     public static int customerX, customerY;
 

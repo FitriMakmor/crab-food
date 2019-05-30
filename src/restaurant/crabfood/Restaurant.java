@@ -335,7 +335,6 @@ public class Restaurant extends JPanel {
 
         fourthPanel.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, Color.BLACK));
         add(fourthPanel, c);
-
     }
 
     public class tabRestaurant implements ActionListener {
