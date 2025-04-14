@@ -280,7 +280,7 @@ public class RestaurantBranch implements Runnable {
         }).start();
         status.append("\n" + task.getTime() + ": Delivery from branch (" + branchX + "," + branchY + ") to location (" + thisCustomerX + "," + thisCustomerY + ") is now starting.");
         customer.setFinishedCookingTime(task.getTime());
-        music.sfx("motorStart");
+        MusicPlayer.sfx("motorStart");
         timer.cancel();
     }
 

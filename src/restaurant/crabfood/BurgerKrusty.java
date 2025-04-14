@@ -324,7 +324,7 @@ public class BurgerKrusty extends JPanel {
             try {
                 status = new OrderStatus(frame, panel);
                 status.create();
-                music.sfx("sizzling");
+                MusicPlayer.sfx("sizzling");
                 mainPanel.setVisible(false);
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
